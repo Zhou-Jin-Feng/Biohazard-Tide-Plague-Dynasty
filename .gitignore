@@ -13,3 +13,7 @@ __pycache__/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# 本地工具缓存
+/.playwright-mcp/
+/.serena/

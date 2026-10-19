@@ -1,0 +1,201 @@
+[core]
+name: 孵化者
+class: CustomUnitMetadata
+price: 7500
+maxHp: 6000
+armour:10
+mass: 8000
+displayDescription: 射程极远，威力大，反步兵，\n每次攻击生成几只绿蠕虫
+techLevel: 1
+generation_credits: 20
+generation_delay: 60
+nanoFactorySpeed:1
+nanoRange:300
+experimental: true
+fireTurretXAtSelfOnDeath:D
+
+
+buildSpeed: 0.001
+availableInDemo: false
+unitsSpawnedOnDeath:腐蚀性液体*3,毒包,尸块*3
+
+exit_x:0
+exit_y:10
+
+canBuild_1_name:sc2
+canBuild_1_pos:  1
+
+canBuild_2_name:ddzb
+canBuild_2_pos:  2
+
+canBuild_3_name:sc
+canBuild_3_pos:  3
+
+radius: 30
+displayRadius: 20
+isBio: false
+selfRegenRate:0.1
+
+softCollisionOnAll: 20
+
+builtFrom_1_name: clzb4
+builtFrom_1_pos:  10
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShock
+
+
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShock
+
+
+[graphics]
+total_frames: 3
+imageScale: 0.5
+image:        fszb.png
+image_wreak: NONE
+image_turret: NONE
+#scaleImagesTo: 20
+#scaleTurretImagesTo: 9
+
+#AUTO
+image_shadow: AUTO
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+animation_moving_start: 1
+animation_moving_end: 2
+animation_moving_speed: 25
+
+animation_idle_start: 2
+animation_idle_end: 2
+
+
+animation_attack_start: 0
+animation_attack_end: 1
+animation_attack_speed: 25
+
+[attack]
+
+
+isMelee: true
+
+canAttack: true
+canAttackFlyingUnits: false
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+isFixedFiring: true
+
+turretSize: 20
+turretTurnSpeed: 2
+
+
+
+maxAttackRange: 310
+shootDelay: 250
+
+[turret_D]
+#
+x: 0
+y: 0
+canShoot: false
+projectile: D
+
+[turret_1]
+#
+x: 0
+y: -10
+
+projectile: 1
+warmup:10
+turnSpeedAcceleration: 1.0
+shoot_sound:cannon_firing
+shoot_sound_vol:0.3
+
+
+[projectile_1]
+directDamage: 10
+life: 150
+speed: 3
+
+image: 绿球.png
+color: #008000
+
+drawSize: 0.45
+spawnUnit: 孵化者炮弹
+areaDamage: 120
+areaRadius: 100
+
+targetGround: true
+
+lightColor: #228B22
+lightSize: 0.75
+
+#armourIgnoreAmount:5
+#shieldDamageMultiplier: 1
+#shieldDefectionMultiplier: 0.75
+#buildingDamageMultiplier: 1
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+
+[projectile_D]
+directDamage: 0
+life: 150
+instant: true
+drawSize: 0.7
+spawnUnit: sc*5
+areaDamage: 500
+areaRadius: 170
+#targetGround: true
+armourIgnoreAmount:5
+shieldDamageMultiplier: 1
+shieldDefectionMultiplier: 0.75
+buildingDamageMultiplier: 1
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DUW.png
+total_frames: 7
+animateFrameStart: 0
+animateFrameEnd: 6
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.6
+scaleTo: 0.7
+
+[movement]
+movementType: LAND
+moveSpeed: 0.5
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.12
+
+
+maxTurnSpeed: 5.5
+turnAcceleration: 0.5
+
+moveSlidingMode :true
+moveIgnoringBody:true
+moveSlidingDir:  181
+
+
+
+[ai]
+maxGlobal:7
+maxEachBase:5

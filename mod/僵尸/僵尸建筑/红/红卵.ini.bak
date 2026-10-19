@@ -1,0 +1,290 @@
+//by蚟醛钯烨
+[core]
+name: 红卵
+displayDescription:生产僵尸的建筑\n作者:蚟醛钯烨\n(防傻逼盗mod专用水印)
+class: CustomUnitMetadata
+price: 1500
+maxHp: 3000
+mass: 9000
+maxShield:5
+shieldRegen:1111
+shieldDisplayOnlyDeflection:true
+techLevel: 1
+buildSpeed: 0.0006
+#availableInDemo: true
+selfBuildRate:0.0006
+selfRegenRate:0.001
+generation_credits:5
+generation_delay:40
+tags: 红卵T1
+energyMax: 40
+energyRegen: 0.05
+footprint: -1,-1,1,1
+
+constructionFootprint: -1,-1,1,3
+
+canRepairBuildings:true
+canRepairUnits:true
+autoRepair:true
+nanoRepairSpeed:0.8
+nanoRange:125
+
+radius: 18
+#displayRadius: 25
+isBio: false
+isBuilding: true
+
+
+softCollisionOnAll: 3
+unitsSpawnedOnDeath:zb111,zb5*3,尸坑
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShockD
+
+
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShockD
+
+
+
+action_1_convertTo: 红巨卵
+action_1_price: 7000
+action_1_text: 升级
+action_1_displayType: upgrade
+action_1_buildSpeed: 0.005
+action_1_pos: 1
+action_1_isLocked:if not numberOfUnitsInTeam(withTag='血肉祭坛', greaterThan=0) 
+action_1_isLockedMessage:需要建造血肉祭坛
+
+
+exit_x:0
+exit_y:-1
+
+canBuild_0_name: setRally,尸潮
+canBuild_0_pos:  0
+
+canBuild_1_name:zb111
+canBuild_1_pos:  1
+
+canBuild_2_name:zb5
+canBuild_2_pos:  2
+
+canBuild_3_name:zb11,褪皮尸群
+canBuild_3_pos:  3
+
+canBuild_4_name:grz,血魔群
+canBuild_4_pos:  4
+
+[action_地狱之手]
+price:800,setFlag=3
+text:地狱之手
+description:升级后能在敌人脚下生成手臂，反步兵
+displayType: action
+buildSpeed:2s
+addResources:setFlag=3
+isActive:if not self.hasFlag(id=3)
+canPlayerCancel:false
+pos=-1
+
+[action_防御意识]
+price:1800,setFlag=4
+text:防御意识
+description:升级后能在敌人进入范围时召唤几个僵尸
+displayType: action
+buildSpeed:2s
+addResources:setFlag=4
+isActive:if not self.hasFlag(id=4)
+canPlayerCancel:false
+pos=-2
+
+[graphics]
+total_frames: 1
+
+image:        红卵.png
+image_back:   NONE
+image_wreak:  clzbdead.png
+
+scaleImagesTo: 95
+#scaleTurretImagesTo: 9
+
+#AUTO
+image_shadow: NONE
+shadowOffsetX:1
+shadowOffsetY:1
+
+animation_idle_start: 0
+animation_idle_end: 0
+animation_idle_speed: 80
+animation_idle_scale_start:0.8
+animation_idle_scale_end: 1
+animation_idle_pingPong: true
+
+
+
+[attack]
+canAttack: true
+canAttackFlyingUnits: false
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+
+turretSize: 20
+turretTurnSpeed: 3
+
+
+maxAttackRange: 400
+shootDelay: 200
+
+[turret_1]
+x: 0
+y: 0
+projectile:1
+canAttackCondition:if self.hasFlag(id=3)
+[turret_2]
+x: 0
+y: 0
+projectile:2
+canAttackCondition:if self.hasFlag(id=3)
+[turret_3]
+x: 0
+y: 0
+projectile:2
+canAttackCondition:if self.hasFlag(id=3)
+[turret_4]
+x: 0
+y: 0
+projectile:2
+canAttackCondition:if self.hasFlag(id=3)
+[turret_5]
+x: 0
+y: 0
+projectile:3
+canAttackCondition:if self.hasFlag(id=3)
+[projectile_1]
+directDamage: 0
+life: 100
+instant: true
+spawnUnit: 手臂
+targetGround:true
+targetGroundSpread: 1
+
+explodeEffect:CUSTOM:lightningShock2
+explodeEffectOnShield:CUSTOM:lightningShock2
+
+
+[projectile_2]
+directDamage: 0
+life: 100
+instant: true
+spawnUnit: 手臂
+targetGround:true
+targetGroundSpread: 75
+
+explodeEffect:CUSTOM:lightningShock2
+explodeEffectOnShield:CUSTOM:lightningShock2
+
+[projectile_3]
+directDamage: 0
+life: 100
+instant: true
+spawnUnit: 手臂
+targetGround:true
+targetGroundSpread: 150
+
+explodeEffect:CUSTOM:lightningShock2
+explodeEffectOnShield:CUSTOM:lightningShock2
+
+
+[effect_lightningShock2]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:手臂.png
+total_frames: 3
+animateFrameStart: 0
+animateFrameEnd: 2
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+[turret_9]
+x: 0
+y: 0
+projectile:9
+energyUsage: 40
+canAttackCondition:if self.hasFlag(id=4)
+[projectile_9]
+directDamage: 0
+explodeOnEndOfLife:true
+life: 0
+speed: 3
+spawnUnit: zb7*2
+targetGround:true
+targetGroundSpread: 1
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:B.png
+total_frames: 4
+animateFrameStart: 0
+animateFrameEnd: 3
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+[effect_lightningShockD]
+life: 160
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DE.png
+total_frames: 10
+animateFrameStart: 0
+animateFrameEnd: 9
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 1
+scaleTo: 1
+
+[movement]
+movementType: NONE
+moveSpeed: 0
+moveAccelerationSpeed: 0.01
+moveDecelerationSpeed: 0.01
+
+maxTurnSpeed: 0
+turnAcceleration: 0.1
+
+
+[ai]
+buildPriority:5
+maxGlobal:2
+maxEachBase:2

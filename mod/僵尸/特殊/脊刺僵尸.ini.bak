@@ -1,0 +1,186 @@
+
+[core]
+name: 脊刺僵尸
+
+displayDescription: 长着脊刺发射器官的僵尸，\n远程，射程中等，血量薄，威力一般\n可升级为翼魔
+
+class: CustomUnitMetadata
+price: 700
+maxHp: 370
+mass: 150
+maxShield:3
+shieldRegen:11111
+shieldDisplayOnlyDeflection:true
+techLevel: 1
+
+buildSpeed: 0.01
+radius: 10
+displayRadius: 8
+
+
+
+
+isBio: true
+unitsSpawnedOnDeath:尸块
+hideScorchMark:true
+selfRegenRate:0.005
+softCollisionOnAll: 12
+canRepairBuildings:false
+canRepairUnits:false
+selfBuildRate:1
+nanoRange:100
+nanoFactorySpeed:0.2
+
+exit_x:0
+exit_y:-1
+
+action_1_convertTo: 翼魔
+action_1_price: 4000
+action_1_text: 升级为翼魔，飞行单位，远程攻击，火力覆盖面广，血量不高。
+action_1_displayType: upgrade
+action_1_buildSpeed: 0.001
+action_1_pos: 0.01
+action_1_isLocked:if not numberOfUnitsInTeam(withTag='血肉祭坛', greaterThan=0) 
+action_1_isLockedMessage:需要建造血肉祭坛
+
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShock
+
+
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShock
+
+
+[graphics]
+imageScale: 0.56
+total_frames: 4
+image:        脊刺僵尸.png
+image_wreak: NONE
+image_turret: NONE
+
+image_shadow: NONE
+shadowOffsetX:1
+
+shadowOffsetY:1
+
+animation_moving_start: 0
+animation_moving_end: 0
+animation_moving_speed: 1000
+
+animation_idle_start: 0
+animation_idle_end: 0
+
+
+animation_attack_start: 0
+animation_attack_end: 3
+animation_attack_speed: 5
+
+lock_body_rotation_with_main_turret: true
+
+[attack]
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits: true
+canAttackUnderwaterUnits: false
+
+turretSize: 10
+turretTurnSpeed: 9
+maxAttackRange: 200
+shootDelay: 40
+
+
+[turret_1]
+x: 2
+y: 0
+shoot_sound:A1.ogg
+shoot_sound_vol:0.2
+
+[projectile_1]
+directDamage: 110
+life: 150
+speed: 7
+
+image:C.png
+drawSize: 0.9
+
+lightColor: #B71C1C
+lightSize: 1.2
+
+
+explodeEffect:CUSTOM:lightningShock1
+explodeEffectOnShield:CUSTOM:lightningShock1
+
+[effect_lightningShock]
+life: 160
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DE.png
+total_frames: 10
+animateFrameStart: 0
+animateFrameEnd: 9
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.3
+scaleTo: 0.35
+
+
+[effect_lightningShock1]
+life: 160
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DE.png
+total_frames: 10
+animateFrameStart: 0
+animateFrameEnd: 9
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.2
+scaleTo: 0.2
+
+
+
+
+
+
+
+[movement]
+movementType: LAND
+moveSpeed: 1.0
+moveAccelerationSpeed: 0.3
+moveDecelerationSpeed: 0.3
+
+maxTurnSpeed: 1.0
+turnAcceleration: 0.05
+
+#moveSlidingMode :false
+#moveIgnoringBody:false
+#moveSlidingDir:  45
+
+
+targetHeight: 5
+targetHeightDrift: 0.4
+
+maxTurnSpeed: 2.5
+turnAcceleration: 0.1
+
+[ai]
+buildPriority:7

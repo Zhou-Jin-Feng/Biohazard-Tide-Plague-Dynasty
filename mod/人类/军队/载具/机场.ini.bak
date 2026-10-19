@@ -1,0 +1,117 @@
+
+[core]
+name: 机场
+class: CustomUnitMetadata
+price: 15000
+maxHp: 5200
+mass: 9000
+
+
+
+techLevel: 1
+buildSpeed: 0.0009
+#generation_credits:200
+#generation_delay:4000
+#availableInDemo: true
+
+radius: 18
+#displayRadius: 25
+isBio: false
+isBuilding: true
+
+
+softCollisionOnAll: 3
+
+footprint:-1,-1,1,1
+constructionFootprint:-2,-2,2,2
+
+exit_x:0
+exit_y:-1
+
+canBuild_0_name: setRally
+canBuild_0_pos:  0
+
+canBuild_1_name:直升机
+canBuild_1_pos:1
+
+[action_buildNuke]
+price:  3000
+text: 预备
+description:预备
+displayType: action
+buildSpeed: 0.001
+pos: 0.2
+isActive:if self.ammoIncludingQueued(lessThan=2)
+addResources: ammo=1
+
+[action_1]
+fireTurretXAtGround: 1
+price:  ammo=1
+text: 空降战术小队
+description:空降战术小队
+displayType: action
+buildSpeed: 5.5s
+pos: 0.1
+displayRemainingStockpile: true
+highPriorityQueue: true
+onlyOneUnitAtATime: true
+
+
+[graphics]
+total_frames: 1
+
+image:        机场.png
+image_back:   NONE
+image_wreak:  NONE
+
+#scaleImagesTo: 20
+#scaleTurretImagesTo: 9
+
+#AUTO
+image_shadow: NONE
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+
+[attack]
+canAttack: false
+canAttackFlyingUnits: false
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+maxAttackRange: 9999
+
+turretSize: 2
+turretTurnSpeed: 2
+shootDelay: 200
+
+[turret_1]
+#nuke turret
+canShoot: false
+x: 0
+y: -5
+idleDir:0
+invisible: true
+projectile: 1
+size: 1
+turnSpeed: 40
+
+[projectile_1]
+directDamage: 0
+life: 100
+instant: true
+spawnUnit: 伞兵标记
+targetGround:true
+
+
+
+[movement]
+movementType: LAND
+moveSpeed: 0.8
+moveAccelerationSpeed: 0.06
+moveDecelerationSpeed: 0.17
+maxTurnSpeed: 0
+turnAcceleration: 0.5
+[ai]
+
+buildPriority:10

@@ -1,0 +1,316 @@
+
+[core]
+name: 触手怪
+displayDescription: 回复速度快，移速稍慢
+class: CustomUnitMetadata
+price: 7500
+maxHp: 1200
+mass: 500
+tags:触手怪
+techLevel: 1
+nanoFactorySpeed:0.1
+generation_credits:50
+generation_delay:300
+buildSpeed: 0.009
+availableInDemo: false
+
+radius: 30
+displayRadius: 40
+isBio: true
+#unitsSpawnedOnDeath:尸块
+hideScorchMark:true
+selfRegenRate:3
+
+softCollisionOnAll: 20
+
+unitsSpawnedOnDeath:小触手怪*3,腐蚀性液体*2
+
+exit_x:0
+exit_y:-1
+
+
+canBuild_1_name:小触手怪
+canBuild_1_pos:  1
+
+canBuild_3_name:sc2
+canBuild_3_pos:  3
+
+#action_2_convertTo: 史前触手怪
+#action_2_price: 320000
+#action_2_text: 升级
+#action_2_displayType: upgrade
+#action_2_buildSpeed: 0.00001
+#action_2_pos: 0.02
+#action_2_isLocked:if not numberOfUnitsInTeam(withTag='血肉祭坛', greaterThan=0) 
+#action_2_isLockedMessage:需要建造血肉祭坛
+
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShock
+
+
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShock
+
+
+
+
+
+[graphics]
+imageScale: 1
+#scaleTurretImagesTo: 28
+total_frames: 1
+image:       null.png
+image_wreak:  NONE
+image_turret: null.png
+scaleImagesTo: 0.85
+
+#teamColorsOnTurret: true
+image_shadow: AUTO
+shadowOffsetX:2
+shadowOffsetY:3
+
+animation_moving_start: 0
+animation_moving_end: 0
+animation_moving_speed: 30
+animation_moving_scale_start:1.1
+animation_moving_scale_end:1.12
+animation_moving_pingPong: true
+
+animation_idle_start: 0
+animation_idle_end: 0
+animation_idle_speed: 20
+animation_idle_scale_start:1.1
+animation_idle_scale_end:1.12
+animation_idle_pingPong: true
+lock_body_rotation_with_main_turret: true
+splastEffect: true
+
+
+
+[attack]
+
+isMelee: true
+
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: true
+
+isFixedFiring: true
+
+turretSize: 20
+turretTurnSpeed: 3
+
+maxAttackRange: 200
+shootDelay: 30
+
+[turret_瘫痪]
+
+x: 0
+y: 0
+
+projectile:瘫痪
+[projectile_瘫痪]
+directDamage: 0
+tags: 瘫痪
+life: 60
+speed: 6
+ballistic:true
+#frame: 9
+
+
+deflectionPower:-1
+
+image: null.png
+#ballistic:true
+
+explodeEffect:NONE
+explodeEffectOnShield:NONE
+
+[turret_2]
+x:  5
+y: 0
+shoot_sound:firing4
+shoot_sound_vol:3
+#energyUsage: 0
+projectile:2
+
+[turret_3]
+x:  3
+y: 0
+shoot_sound:firing4
+shoot_sound_vol:3
+#energyUsage: 0
+projectile:2
+
+[projectile_2]
+directDamage: 50
+life: 8000
+speed: 0.5
+targetSpeed: 8
+autoTargetingOnDeadTarget:true
+spawnUnit: 小腐蚀性液体(淡)
+targetGround:true
+targetGroundSpread: 45
+#frame: 0
+frame: 6
+lightColor: #00ff00
+lightSize: 0.6
+
+explodeEffect:CUSTOM:lightningShock2
+explodeEffectOnShield:CUSTOM:lightningShock2
+
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:gas2.png
+total_frames: 12
+animateFrameStart: 0
+animateFrameEnd: 11
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+
+[effect_lightningShock2]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:感染特效.png
+total_frames: 14
+animateFrameStart: 0
+animateFrameEnd: 13
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+[leg_9]
+x: 0
+y: 0
+attach_x: 0
+attach_y: 1
+moveSpeed: 4
+resetAngle:5
+rotateSpeed: 20
+heightSpeed: 0.8
+dust_effect: false
+holdDisMin: 11
+holdDisMax: 13
+hardLimit: 15
+image_leg:  null.png
+image_foot: 章鱼头.png
+
+[leg_1]
+x: 0
+y: 0
+attach_x: 1
+attach_y: 1
+moveSpeed: 4
+resetAngle:5
+rotateSpeed: 20
+heightSpeed: 0.8
+dust_effect: true
+holdDisMin: 11
+holdDisMax: 13
+hardLimit: 30
+image_leg:  null.png
+image_foot: 触手101.png
+
+[leg_2]
+x: 0
+y: 0
+attach_x: -1
+attach_y: 1
+copyFrom: 1
+image_leg:  null.png
+image_foot: 触手102.png
+
+[leg_3]
+x: 0
+y: 0
+attach_x: 1
+attach_y: 1
+hardLimit: 15
+copyFrom: 1
+image_leg:  null.png
+image_foot: 触手111.png
+
+[leg_4]
+x: 0
+y: 0
+attach_x: -1
+attach_y: 1
+copyFrom: 3
+image_leg:  null.png
+image_foot: 触手112.png
+
+[leg_5]
+x: 0
+y: 0
+attach_x: 1
+attach_y: 0
+copyFrom: 1
+image_leg:  null.png
+image_foot: 触手011.png
+
+[leg_6]
+x: 0
+y: 0
+attach_x: -1
+attach_y: 0
+copyFrom: 1
+image_leg:  null.png
+image_foot: 触手012.png
+
+[leg_7]
+x: 0
+y: 0
+attach_x: 1
+attach_y: 0
+copyFrom: 1
+image_leg:  null.png
+image_foot: 触手001.png
+
+[leg_8]
+x: 0
+y: 0
+attach_x: -1
+attach_y: 0
+copyFrom: 1
+image_leg:  null.png
+image_foot: 触手002.png
+
+[movement]
+movementType: OVER_CLIFF_WATER
+moveSpeed: 1
+moveAccelerationSpeed: 0.3
+moveDecelerationSpeed: 0.3
+maxTurnSpeed: 1
+turnAcceleration: 0.5
+moveSlidingMode :false
+moveIgnoringBody:true
+moveSlidingDir:  181
+targetHeight: 2
+reverseSpeedPercentage:0
+
+
+[ai]
+buildPriority:3

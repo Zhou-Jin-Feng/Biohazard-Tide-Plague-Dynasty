@@ -1,0 +1,165 @@
+﻿
+[core]
+name: 九头龙战车
+displayDescription:射速快，但并不适合对付高防御单位
+class: CustomUnitMetadata
+price: 7500
+maxHp: 3000
+mass: 4900
+experimental: true
+energyMax: 30
+energyRegen: 0.5
+energyNeedsToRechargeToFull: true
+armourMinDamageToKeep: 0
+armour:20
+maxShield:25
+shieldRegen:1111111
+shieldDisplayOnlyDeflection:true
+shieldRenderRadius:0
+techLevel: 2
+buildSpeed: 0.0006
+#availableInDemo: true
+radius: 30
+displayRadius: 40
+isBio: false
+
+selfRegenRate:0.0009
+#buildingSelectionOffset: 23
+maxTransportingUnits: 1
+transportUnitsRequireTag: 民兵
+softCollisionOnAll: 12
+transportUnitsKillOnDeath:false
+
+[action_瘫痪]
+autoTrigger:if self.hasFlag(id=5)
+#addResources:setFlag=0
+isVisible: false          
+convertTo: 九头龙战车(瘫痪)
+pos=1
+
+[graphics]
+imageScale: 0.5
+total_frames: 1
+image:        t1.png
+image_wreak:  t1残骸.png
+image_turret: 加特林2.png
+scaleImagesTo: 50
+scaleTurretImagesTo: 25
+
+#AUTO
+image_shadow: AUTO
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+[attack]
+
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+
+isFixedFiring: false
+
+turretSize: 10
+turretTurnSpeed: 4
+
+maxAttackRange: 300
+shootDelay: 3
+
+
+
+
+[turret_1]
+x: 0
+y: 0
+canShoot: false
+
+[turret_2]
+x: 3
+y: 0
+slave:true
+attachedTo:1
+warmup: 0
+invisible: true
+shoot_sound:gun_fire
+shoot_sound_vol:0.2
+shouldResetTurret: false
+energyUsage: 2
+projectile:1
+
+[turret_3]
+x: -3
+y: 0
+slave:true
+attachedTo:1
+warmup: 0
+invisible: true
+shoot_sound:gun_fire
+shoot_sound_vol:0.2
+shouldResetTurret: false
+energyUsage: 2
+projectile:1
+
+[turret_瘫痪]
+x:0
+y:0
+turnSpeed: 4000
+warmup:0
+invisible:true
+resourceUsage: setFlag=5
+interceptProjectiles_withTags:瘫痪
+#interceptProjectiles_andTargetingGroundUnderDistance:50
+interceptProjectiles_andUnderDistance:70
+#interceptProjectiles_andOverHeight:0
+canAttackCondition:if not self.hasFlag(id=5)
+projectile:瘫痪
+limitingRange:70
+canShoot:false
+
+[projectile_瘫痪]
+directDamage: 0
+life: 0
+speed: 0
+
+frame: 1
+
+drawSize: 0
+explodeEffect:NONE
+explodeEffectOnShield:NONE
+
+
+[projectile_1]
+directDamage: 40
+areaDamage: 15
+areaRadius: 60
+#targetGround: true
+#targetGroundSpread: 8
+#areaHitAirAndLandAtSameTime: true
+
+life: 2400
+speed: 15
+targetSpeed: 11
+trailEffect: true
+largeHitEffect: false
+ballistic: false
+
+image: 炮弹1.png
+drawSize: 0.35
+
+
+[movement]
+movementType: LAND
+moveSpeed:1.9
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.09
+maxTurnSpeed: 2
+turnAcceleration: 0.17
+
+[ai]
+
+buildPriority:1
+
+
+
+

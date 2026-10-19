@@ -1,0 +1,243 @@
+[core]
+name: zb1
+displayText: 肉瘤
+displayDescription: 近战，死后生成几条白蠕虫
+class: CustomUnitMetadata
+price: 750
+maxHp: 850
+mass: 800
+
+fireTurretXAtSelfOnDeath:D
+
+techLevel: 1
+nanoFactorySpeed:0.05
+nanoRange:300
+generation_credits:50
+generation_delay:300
+armour:5
+maxShield:150
+shieldRegen:1
+shieldDisplayOnlyDeflection:true
+shieldRenderRadius:0
+buildSpeed: 0.008
+availableInDemo: false
+
+radius: 20
+displayRadius: 20
+isBio: true
+#unitsSpawnedOnDeath:尸块
+hideScorchMark:true
+selfRegenRate:0.1
+
+softCollisionOnAll: 20
+unitsSpawnedOnDeath:腐蚀性液体*2,尸块*2
+
+
+action_1_convertTo: 孵化者
+action_1_price: 7200
+action_1_text: 升级为孵化者，射程极远，威力大，反步兵，每次攻击生成3只绿蠕虫
+action_1_displayType: upgrade
+action_1_buildSpeed: 0.001
+action_1_pos: 1
+action_1_isLocked:if not numberOfUnitsInTeam(withTag='绿卵T2', greaterThan=0) 
+action_1_isLockedMessage:需要建造突变绿卵
+
+action_2_convertTo: 播撒者
+action_2_price: 2000
+action_2_text: 升级为播撒者，射程短，反步兵
+action_2_displayType: upgrade
+action_2_buildSpeed: 0.001
+action_2_pos: 1
+action_2_isLocked:if not numberOfUnitsInTeam(withTag='绿卵T2', greaterThan=0) 
+action_2_isLockedMessage:需要建造突变绿卵
+
+exit_x:0
+exit_y:-1
+
+
+canBuild_1_name:sc2
+canBuild_1_pos:  1
+
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShock2
+
+
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShock2
+
+
+
+[graphics]
+total_frames: 3
+imageScale: 0.55
+image:        zb1.png
+image_wreak: NONE
+image_turret: NONE
+#scaleImagesTo: 20
+#scaleTurretImagesTo: 9
+
+#AUTO
+image_shadow: NONE
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+animation_moving_start: 0
+animation_moving_end: 0
+animation_moving_speed: 50
+
+animation_idle_start: 0
+animation_idle_end: 0
+
+
+animation_attack_start: 1
+animation_attack_end: 2
+animation_attack_speed: 10
+
+
+[attack]
+
+isMelee: true
+
+canAttack: true
+canAttackFlyingUnits: false
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+
+isFixedFiring: true
+
+turretSize: 20
+turretTurnSpeed: 3
+
+maxAttackRange: 30
+shootDelay: 60
+
+[turret_1]
+x: 0
+y: 0
+shoot_sound:F3.ogg
+shoot_sound_vol:0.5
+projectile:1
+
+[turret_3]
+x: 0
+y: 0
+#shoot_sound:firing3
+#shoot_sound_vol:2
+projectile:3
+warmup: 25
+
+[turret_D]
+x: 0
+y: 0
+canShoot: false
+shoot_sound:F3.ogg
+shoot_sound_vol:1
+projectile:2
+
+[projectile_1]
+directDamage: 90
+life: 50
+instant: true
+
+#spawnUnit: sc2
+
+#targetGround:true
+#targetGroundSpread: 10
+areaDamage: 120
+areaRadius: 70
+#areaHitAirAndLandAtSameTime: true
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[projectile_3]
+directDamage: 0
+life: 50
+instant: true
+
+spawnUnit: sc2
+
+targetGround:true
+targetGroundSpread: 10
+areaDamage: 0
+areaRadius: 0
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[projectile_2]
+directDamage: 90
+life: 50
+instant: true
+spawnUnit: sc2*4
+#targetGround:true
+#targetGroundSpread: 10
+areaDamage: 500
+areaRadius: 120
+areaHitAirAndLandAtSameTime: true
+
+explodeEffect:CUSTOM:lightningShock2
+explodeEffectOnShield:CUSTOM:lightningShock2
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:damage.png
+total_frames: 12
+animateFrameStart: 0
+animateFrameEnd: 11
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+[effect_lightningShock2]
+life: 120
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DUW.png
+total_frames: 7
+animateFrameStart: 0
+animateFrameEnd: 6
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.5
+scaleTo: 0.5
+
+[movement]
+movementType: LAND
+moveSpeed: 0.88
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.12
+
+
+maxTurnSpeed: 5.5
+turnAcceleration: 0.5
+
+moveSlidingMode :true
+moveIgnoringBody:true
+moveSlidingDir:  181
+
+
+[ai]
+buildPriority:5
+ai_upgradePriority:1
+maxEachBase:15

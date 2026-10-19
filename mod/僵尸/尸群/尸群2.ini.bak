@@ -1,0 +1,155 @@
+
+[core]
+name: 尸群2
+class: CustomUnitMetadata
+price: 50
+maxHp: -50
+mass: 150
+
+techLevel: 1
+nanoFactorySpeed:0.05
+nanoRange:300
+
+
+buildSpeed: 0.09
+availableInDemo: false
+radius: 24
+displayRadius: 24
+isBio: true
+unitsSpawnedOnDeath:zb111,zb5
+hideScorchMark:true
+selfRegenRate:0.1
+
+softCollisionOnAll: 25
+
+
+
+action_1_convertTo: 尸潮2
+action_1_price: 1000
+action_1_text: 尸潮
+action_1_displayType: upgrade
+action_1_buildSpeed: 0.0004
+action_1_pos: 0.01
+
+
+
+
+exit_x:0
+exit_y:10
+
+canBuild_1_name:zb4
+canBuild_1_pos:  1
+
+
+
+[graphics]
+total_frames: 1
+imageScale: 0.5
+image:        none.png
+image_wreak: NONE
+image_turret: 2.png
+#scaleImagesTo: 20
+scaleTurretImagesTo: 23
+
+#AUTO
+image_shadow: AUTO
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+animation_moving_start: 0
+animation_moving_end: 0
+animation_moving_speed: 25
+
+animation_idle_start: 0
+animation_idle_end: 0
+
+
+animation_attack_start: 0
+animation_attack_end: 0
+animation_attack_speed: 25
+
+
+
+[attack]
+
+isMelee: true
+
+canAttack: true
+canAttackFlyingUnits: false
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+
+
+
+turretSize: 60
+turretTurnSpeed: 3
+
+maxAttackRange: 10
+shootDelay: 60
+
+[turret_1]
+x: 9
+y: 0
+shoot_sound:firing4
+shoot_sound_vol:2
+
+[turret_2]
+x: -9
+y: 0
+shoot_sound:firing4
+shoot_sound_vol:2
+
+[turret_3]
+x: 0
+y: 7
+shoot_sound:firing4
+shoot_sound_vol:2
+
+[projectile_1]
+directDamage: 50
+life: 50
+instant: true
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:damage.png
+total_frames: 12
+animateFrameStart: 0
+animateFrameEnd: 11
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+[movement]
+movementType: LAND
+moveSpeed: 1.2
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.12
+
+
+maxTurnSpeed: 1.1
+turnAcceleration: 0.0
+
+moveSlidingMode :true
+moveIgnoringBody:true
+moveSlidingDir:  181
+
+
+[ai]
+buildPriority:10
+ai_upgradePriority:1
+maxEachBase:40

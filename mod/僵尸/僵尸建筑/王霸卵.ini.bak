@@ -1,0 +1,203 @@
+
+[core]
+name: 王霸卵
+class: CustomUnitMetadata
+price: 2500
+maxHp: 2000
+mass: 9000
+maxShield:5
+shieldRegen:1111
+shieldDisplayOnlyDeflection:true
+techLevel: 1
+generation_credits:5
+generation_delay:40
+buildSpeed: 0.0006
+#availableInDemo: true
+selfBuildRate:0.0006
+selfRegenRate:0.001
+
+footprint: -1,-1,1,1
+
+constructionFootprint: -1,-1,1,1
+
+canRepairBuildings:true
+canRepairUnits:true
+autoRepair:true
+nanoRepairSpeed:0.5
+nanoRange:125
+
+radius: 18
+#displayRadius: 25
+isBio: true
+isBuilding: true
+
+
+softCollisionOnAll: 3
+unitsSpawnedOnDeath:超级尸潮,尸坑
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShockD
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShockD
+
+
+
+
+exit_x:0
+exit_y:-1
+
+action_1_convertTo: 孵化者
+action_1_price: 1000
+action_1_text: 孵化者
+action_1_displayType: upgrade
+action_1_buildSpeed: 0.005
+action_1_pos: 0.01
+action_1_isLocked:if not numberOfUnitsInTeam(withTag='血肉祭坛', greaterThan=0) 
+action_1_isLockedMessage:需要建造血肉祭坛
+
+action_2_convertTo: 大家伙
+action_2_price: 1000
+action_2_text: 大家伙
+action_2_displayType: upgrade
+action_2_buildSpeed: 0.005
+action_2_pos: 0.02
+action_2_isLocked:if not numberOfUnitsInTeam(withTag='血肉祭坛', greaterThan=0) 
+action_2_isLockedMessage:需要建造血肉祭坛
+
+action_3_convertTo: 自动孢子
+action_3_price: 50
+action_3_text: 自动孢子
+action_3_displayType: upgrade
+action_3_buildSpeed: 0.5
+action_3_pos: 0.03
+action_3_isLocked:if not numberOfUnitsInTeam(withTag='血肉祭坛', greaterThan=0) 
+action_3_isLockedMessage:需要建造血肉祭坛
+
+action_4_convertTo: 遁地孢子
+action_4_price: 70
+action_4_text: 遁地孢子
+action_4_displayType: upgrade
+action_4_buildSpeed: 0.25
+action_4_pos: 0.04
+action_4_isLocked:if not numberOfUnitsInTeam(withTag='血肉祭坛', greaterThan=0) 
+action_4_isLockedMessage:需要建造血肉祭坛
+
+[graphics]
+total_frames: 1
+
+image:        虫卵1.png
+image_back:   NONE
+image_wreak:  虫卵2.png
+
+#scaleImagesTo: 20
+#scaleTurretImagesTo: 9
+
+#AUTO
+image_shadow: NONE
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+
+[attack]
+canAttack: false
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+
+turretSize: 20
+turretTurnSpeed: 2
+
+
+
+maxAttackRange: 300
+shootDelay: 60
+
+[turret_1]
+#
+x: 0
+y: -10
+canShoot: false
+projectile: 1
+
+
+
+[projectile_1]
+directDamage: 20
+life: 150
+speed: 2.5
+
+frame: 0
+color: #008000
+
+drawSize: 1.0
+
+areaDamage: 10
+areaRadius: 60
+
+targetGround: false
+
+lightColor: #228B22
+lightSize: 0.9
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:感染特效.png
+total_frames: 14
+animateFrameStart: 0
+animateFrameEnd: 13
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+
+[effect_lightningShockD]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DUW.png
+total_frames: 7
+animateFrameStart: 0
+animateFrameEnd: 6
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.6
+scaleTo: 0.7
+
+[movement]
+movementType: NONE
+moveSpeed: 0
+moveAccelerationSpeed: 0.01
+moveDecelerationSpeed: 0.01
+
+maxTurnSpeed: 0
+turnAcceleration: 0.1
+
+
+[ai]
+buildPriority:3
+maxGlobal:2
+maxEachBase:2
+ai_upgradePriority:1

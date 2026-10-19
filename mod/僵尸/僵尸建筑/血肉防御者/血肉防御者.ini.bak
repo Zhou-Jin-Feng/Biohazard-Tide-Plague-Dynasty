@@ -1,0 +1,320 @@
+//by蚟醛钯烨
+[core]
+name:  血肉防御者
+displayDescription: 作者:蚟醛钯烨\n(防傻逼盗mod专用水印)
+class: CustomUnitMetadata
+price: 3500
+maxHp: 2500
+mass: 9000
+maxShield:5
+shieldRegen:1111
+shieldDisplayOnlyDeflection:true
+techLevel: 1
+generation_credits:5
+generation_delay:40
+buildSpeed: 0.0006
+#availableInDemo: true
+selfBuildRate:0.0006
+selfRegenRate:0.001
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShockD
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShockD
+
+energyMax: 6
+energyRegen: 0.02
+footprint: -1,-1,1,1
+constructionFootprint: -1,-1,1,1
+
+canRepairBuildings:true
+canRepairUnits:true
+autoRepair:true
+nanoRepairSpeed:0.5
+nanoRange:125
+radius: 18
+#displayRadius: 25
+isBio: false
+isBuilding: true
+softCollisionOnAll: 3
+unitsSpawnedOnDeath:寄生虫*4
+exit_x:0
+exit_y:-1
+
+[graphics]
+total_frames: 5
+
+image:        血肉.png
+image_back:   NONE
+image_wreak:  clzbdead.png
+#scaleImagesTo: 20
+#scaleTurretImagesTo: 40
+
+#AUTO
+image_shadow: NONE
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+animation_idle_start: 0
+animation_idle_end: 4
+animation_idle_speed: 20
+animation_idle_scale_start:1
+animation_idle_scale_end:1.1
+animation_idle_pingPong: true
+
+
+animation_attack_start: 0
+animation_attack_end: 4
+animation_attack_speed: 20
+animation_attack_scale_start:1.2
+animation_attack_scale_end:0.9
+animation_attack_pingPong: true
+
+[attack]
+
+#turretRotateWithBody: true
+
+
+isMelee: true
+
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: true
+
+
+turretSize: 30
+turretTurnSpeed: 9
+
+maxAttackRange: 320
+shootDelay: 30
+
+[turret_1]
+x: 0
+y: 0
+
+shoot_light:#FF00CCCC
+canShoot:false
+recoilOffset: -3
+recoilOutTime: 6
+recoilReturnTime: 18
+
+[turret_2]
+#missile turret
+x: 10
+y: 22
+idleDir:0
+
+invisible: true
+canShoot:true
+
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+canAttackNotTouchingWaterUnits: true
+projectile: 1
+size: 1
+
+turnSpeed: 40
+
+energyUsage: 1
+
+
+shoot_flame:CUSTOM:lightningShock
+
+
+[turret_3]
+#back turret
+copyFrom: 2
+
+x: -10
+y: 22
+idleDir:0
+warmup:20
+projectile: 3
+linkDelayWithTurret:2
+
+
+
+[turret_4]
+#back turret
+copyFrom: 2
+
+x: -10
+y: 14
+idleDir:0
+warmup:40
+projectile: 3
+linkDelayWithTurret:2
+
+
+[turret_5]
+#back turret
+copyFrom: 2
+
+x: 10
+y: 14
+idleDir:0
+warmup:60
+projectile: 1
+linkDelayWithTurret:2
+
+[turret_6]
+#back turret
+copyFrom: 2
+
+x: 10
+y: 4
+idleDir:0
+warmup:80
+projectile: 1
+linkDelayWithTurret:2
+
+[turret_7]
+#back turret
+copyFrom: 2
+
+x: -10
+y: 4
+idleDir:0
+warmup:100
+projectile: 3
+linkDelayWithTurret:2
+
+[turret_8]
+#bot turret
+x: 10
+y: 22
+canShoot:false
+idleDir:0
+
+invisible: true
+
+shoot_sound:missile_fire
+shoot_sound_vol:1
+shoot_light:#FFEECCCC
+
+projectile: 1
+size: 1
+
+turnSpeed: 40
+shoot_flame:shockwave
+
+
+[projectile_1]
+#missile
+directDamage: 35
+life: 240
+speed: 0.3
+targetSpeed: 6
+trailEffect: true
+largeHitEffect: true
+ballistic: true
+ballistic_delaymove_height:40
+ballistic_height: 50
+image:左手臂.png
+drawSize: 0.5
+areaDamage: 180
+areaRadius: 55
+spawnUnit: 寄生虫
+autoTargetingOnDeadTarget: true
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+
+[projectile_3]
+#missile
+directDamage: 35
+life: 240
+speed: 0.3
+targetSpeed: 6
+trailEffect: true
+largeHitEffect: true
+ballistic: true
+ballistic_delaymove_height:40
+ballistic_height: 50
+image:右手臂.png
+drawSize: 0.5
+areaDamage: 180
+areaRadius: 55
+spawnUnit: 寄生虫
+autoTargetingOnDeadTarget: true
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+
+
+[effect_lightningShock]
+life: 160
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DE.png
+total_frames: 10
+animateFrameStart: 0
+animateFrameEnd: 9
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+scaleFrom: 0.2
+scaleTo: 0.2
+
+[effect_lightningShockD]
+life: 160
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DE.png
+total_frames: 10
+animateFrameStart: 0
+animateFrameEnd: 9
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.8
+scaleTo: 0.8
+
+[effect_projectileTrail]
+image:  light_50.png
+life: 20
+fadeOut: true
+attachedToUnit: false
+color: #63e6e8
+fadeInTime:2
+scaleFrom: 0.4
+scaleTo: 0.4
+alpha: 0.6
+drawUnderUnits:true
+#ySpeedRelative:-1
+
+[movement]
+movementType: NONE
+moveSpeed: 0
+moveAccelerationSpeed: 0.01
+moveDecelerationSpeed: 0.01
+
+maxTurnSpeed: 0
+turnAcceleration: 0.1
+
+
+
+[ai]
+buildPriority:3
+maxGlobal:5
+maxEachBase:5

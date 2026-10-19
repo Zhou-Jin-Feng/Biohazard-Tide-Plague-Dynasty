@@ -1,0 +1,175 @@
+
+[core]
+name: 寄生虫
+displayDescription: 作者:蚟醛钯烨\n(防傻逼盗mod专用水印)
+class: CustomUnitMetadata
+price: 600
+maxHp: 50
+mass: 150
+maxShield:5
+shieldRegen:1111
+shieldDisplayOnlyDeflection:true
+techLevel: 1
+
+buildSpeed: 0.001
+radius: 10
+displayRadius: 8
+
+
+energyMax: 6
+energyRegen: 0
+#startEnergyAtZero: true
+
+exit_x:0
+exit_y:-1
+
+isBio: true
+unitsSpawnedOnDeath:bleed
+hideScorchMark:true
+selfRegenRate:-0.08
+softCollisionOnAll: 12
+canRepairBuildings:false
+canRepairUnits:false
+selfBuildRate:1
+nanoRange:100
+nanoFactorySpeed:0.9
+
+exit_x:0
+exit_y:-1
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShockD
+
+
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShockD
+
+
+[action_trigger_HP]
+autoTrigger: if self.energy(lessThan=1)
+addResources: hp=50
+addResources: energy=6
+buildSpeed: 0
+text: TRIGGER
+isVisible: false
+
+[graphics]
+imageScale: 0.1
+total_frames: 2
+image:        寄生虫.png
+image_wreak: NONE
+image_turret: NONE
+
+image_shadow: AUTO
+shadowOffsetX:1
+
+shadowOffsetY:1
+
+animation_moving_start: 0
+animation_moving_end: 1
+animation_moving_speed: 20
+
+animation_idle_start: 0
+animation_idle_end: 0
+
+
+animation_attack_start: 0
+animation_attack_end: 1
+animation_attack_speed: 5
+
+lock_body_rotation_with_main_turret: true
+
+
+[attack]
+canAttack: true
+canAttackFlyingUnits: false
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: true
+#isFixedFiring: true
+turretSize: 20
+turretTurnSpeed: 200
+maxAttackRange: 60
+shootDelay: 3
+
+[turret_0]
+x: 2
+y: 0
+shoot_sound:firing4
+shoot_sound_vol:0
+
+resourceUsage:hp: -20
+
+
+[projectile_1]
+directDamage: 10
+life: 50
+instant: true
+teleportSource:true
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[projectile_2]
+directDamage: 140
+life: 50
+instant: true
+spawnUnit:寄生虫
+teleportSource:true
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image: DE.png
+total_frames: 10
+animateFrameStart: 0
+animateFrameEnd: 9
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+scaleFrom: 0.1
+scaleTo: 0.1
+
+[effect_lightningShockD]
+life: 160
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DE.png
+total_frames: 10
+animateFrameStart: 0
+animateFrameEnd: 9
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.1
+scaleTo: 0.1
+
+
+[movement]
+movementType: LAND
+moveSpeed: 1.0
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.12
+
+targetHeight: -5
+targetHeightDrift: 5
+
+maxTurnSpeed: 95
+turnAcceleration: 0.1

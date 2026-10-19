@@ -1,0 +1,15 @@
+# 打包产物（发布到 GitHub Releases）
+/dist/
+/*.rwmod
+
+# 本地备份
+/_backup/
+
+# Python
+__pycache__/
+*.pyc
+
+# 系统文件
+Thumbs.db
+desktop.ini
+.DS_Store

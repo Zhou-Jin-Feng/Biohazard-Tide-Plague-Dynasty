@@ -1,0 +1,171 @@
+﻿
+[core]
+name: 直升机
+class: CustomUnitMetadata
+price: 8000
+maxHp: 1500
+mass: 1500
+shieldRenderRadius:0
+techLevel: 2
+
+buildSpeed: 0.0003
+#availableInDemo: true
+
+radius: 30
+displayRadius:30
+experimental: true
+
+isBio: false
+energyMax: 40
+energyRegen: 0.11
+energyNeedsToRechargeToFull: true
+
+action_1_convertTo: 直升机(降落)
+action_1_price: 0
+action_1_text: 降落
+action_1_displayType: upgrade
+action_1_buildSpeed: 0.04
+action_1_pos: 0.01
+
+#buildingSelectionOffset: 23
+maxTransportingUnits: 4
+transportUnitsRequireTag: 民兵
+softCollisionOnAll:3
+transportUnitsKillOnDeath:false
+[graphics]
+total_frames: 1
+imageScale: 0.5
+image:        黑鹰直升机.png
+image_wreak:   黑鹰直升机残骸.png
+image_turret: 螺旋桨2.png
+
+scaleImagesTo: 120
+scaleTurretImagesTo: 120
+
+image_shadow: AUTO
+
+shadowOffsetX:0
+shadowOffsetY:20
+
+[attack]
+
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: true
+maxAttackRange: 260
+shootDelay: 10
+isFixedFiring: true
+turretTurnSpeed: 4
+
+[turret_1]
+#main turret
+x: 0
+y: 21
+canShoot: false
+#idleDir:45
+#shouldResetTurret: false
+idleSpin: 35
+
+[turret_2]
+#火箭弹
+canAttackUnderwaterUnits: false
+x: 0
+y: 25
+idleDir:0
+energyUsage: 10
+shoot_sound:missile_fire
+shoot_sound_vol:0.1
+shoot_light:#FFEECCCC
+delay:30
+projectile: 1
+size: 1
+turnSpeed: 1
+invisible: true
+
+[turret_3]
+
+x: 0
+y: 7
+canShoot: true
+shoot_sound:gun_fire
+shoot_sound_vol:0.1
+shouldResetTurret: false
+image:none.png
+
+invisible: true
+projectile: 2
+
+[turret_开火口1]
+x: 0
+y: 10
+shoot_sound:gun_fire
+shoot_sound_vol:0.1
+projectile:2
+invisible: true
+canAttackLandUnits: if self.transportingCount(greaterThan=0)
+canAttackFlyingUnits: if self.transportingCount(greaterThan=0)
+canAttackUnderwaterUnits: if self.transportingCount(greaterThan=0)
+[turret_开火口2]
+x: 0
+y: 10
+shoot_sound:gun_fire
+shoot_sound_vol:0.1
+projectile:2
+invisible: true
+canAttackLandUnits: if self.transportingCount(greaterThan=1)
+canAttackFlyingUnits: if self.transportingCount(greaterThan=1)
+canAttackUnderwaterUnits: if self.transportingCount(greaterThan=1)
+[projectile_1]
+#missile
+directDamage: 0
+life: 3000
+speed: 0.3
+targetSpeed: 5
+trailEffect: true
+largeHitEffect: true
+frame: 10
+drawSize: 0.75
+areaDamage: 300
+areaRadius: 60
+targetGround:true
+targetGroundSpread: 10
+#autoTargetingOnDeadTarget:true
+
+[projectile_2]
+directDamage: 50
+life: 70
+speed: 12
+
+frame: 11
+color: #FFAA44
+drawSize: 0.6
+
+lightColor: #FFFF8866
+lightSize: 0.6
+
+
+[movement]
+movementType: AIR
+moveSpeed: 2.5
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.07
+reverseSpeedPercentage:  0.35
+
+targetHeight: 40
+targetHeightDrift: 5.5
+
+maxTurnSpeed: 1.0
+turnAcceleration: 0.2
+
+moveSlidingMode :true
+moveIgnoringBody:true
+
+
+[ai]
+
+buildPriority:1
+
+
+
+

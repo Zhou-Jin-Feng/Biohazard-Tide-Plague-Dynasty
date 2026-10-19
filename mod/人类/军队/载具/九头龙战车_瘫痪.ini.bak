@@ -1,0 +1,150 @@
+﻿
+[core]
+name: 九头龙战车(瘫痪)
+displayDescription:射速快，但并不适合对付高防御单位
+class: CustomUnitMetadata
+price: 7500
+maxHp: 3000
+mass: 4900
+experimental: true
+energyMax: 30
+energyRegen: 0.5
+energyNeedsToRechargeToFull: true
+
+armour:20
+maxShield:25
+shieldRegen:1111111
+shieldDisplayOnlyDeflection:true
+shieldRenderRadius:0
+techLevel: 2
+buildSpeed: 0.0006
+#availableInDemo: true
+radius: 30
+displayRadius: 40
+isBio: false
+
+#selfRegenRate:-0.1
+#buildingSelectionOffset: 23
+maxTransportingUnits: 1
+transportUnitsRequireTag: 民兵
+softCollisionOnAll: 12
+transportUnitsKillOnDeath:false
+
+[action_自动维护]
+price:0
+autoTrigger:if self.timeAlive(laterThanSeconds=10)
+buildSpeed:7s
+addResources:unsetFlag=5
+#isVisible:if self.hasFlag(id=5)
+#isActive:if self.hasFlag(id=5)
+#canPlayerCancel:false
+convertTo: 九头龙战车
+isVisible:false
+pos=1
+
+[action_手动维护]
+price:0
+buildSpeed:3s
+addResources:unsetFlag=5
+isVisible:true
+isActive:true
+canPlayerCancel:false
+convertTo: 九头龙战车
+text:恢复动力
+pos=2
+
+[graphics]
+imageScale: 0.5
+total_frames: 1
+image:        t1.png
+image_wreak:  t1残骸.png
+image_turret: 加特林2.png
+scaleImagesTo: 50
+scaleTurretImagesTo: 25
+
+#AUTO
+image_shadow: AUTO
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+[attack]
+
+canAttack: false
+canAttackFlyingUnits: false
+canAttackLandUnits:   false
+canAttackUnderwaterUnits: false
+
+isFixedFiring: false
+
+turretSize: 20
+turretTurnSpeed: 0
+
+maxAttackRange: 300
+shootDelay: 3
+
+
+
+
+[turret_1]
+x: 0
+y: 0
+canShoot: false
+
+[turret_2]
+x: 7
+y: 0
+slave:true
+attachedTo:1
+warmup: 0
+invisible: true
+shoot_sound:gun_fire
+shoot_sound_vol:0.2
+shouldResetTurret: false
+energyUsage: 2
+
+[turret_3]
+x: -7
+y: 0
+slave:true
+attachedTo:1
+warmup: 0
+invisible: true
+shoot_sound:gun_fire
+shoot_sound_vol:0.2
+shouldResetTurret: false
+energyUsage: 2
+
+
+[projectile_1]
+directDamage: 40
+areaDamage: 15
+areaRadius: 60
+#targetGround: true
+#targetGroundSpread: 8
+#areaHitAirAndLandAtSameTime: true
+
+life: 2400
+speed: 15
+targetSpeed: 11
+trailEffect: true
+largeHitEffect: false
+ballistic: false
+frame: 19
+
+
+[movement]
+movementType: LAND
+moveSpeed:0
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.09
+maxTurnSpeed: 0
+turnAcceleration: 0.17
+
+[ai]
+
+buildPriority:1
+
+
+
+

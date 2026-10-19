@@ -1,0 +1,98 @@
+
+[core]
+name: bleed
+#displayDescription: 
+class: CustomUnitMetadata
+price: 0
+maxHp: -50
+mass: 100
+
+techLevel: 1
+buildSpeed: 0.005
+#availableInDemo: true
+
+#armour: 1
+#armourMinDamageToKeep: 1
+radius: -1
+isBio: true
+isBug: false
+
+disableAllUnitCollisions:true
+canNotBeDirectlyAttacked:true
+#isUnselectable:true
+hideScorchMark:true
+
+#numBitsOnDeath: 10
+
+
+softCollisionOnAll: 80
+#energyMax: 3600
+#energyRegen: -1
+#dieOnZeroEnergy: true
+
+explodeOnDeath:false
+effectOnDeath: NONE
+explodeOnDeathGroundCollosion:false
+effectOnDeathGroundCollosion: NONE
+
+
+[graphics]
+imageScale: 0.5
+total_frames: 1
+image:        bleed.png
+image_wreak:  bleed.png
+image_turret: NONE
+#scaleImagesTo: 20
+#scaleTurretImagesTo: 9
+
+teamColorsUseHue:false
+teamColorsOnTurret:false
+
+#AUTO
+image_shadow: AUTO
+shadowOffsetX:0
+shadowOffsetY:0
+
+
+[attack]
+canAttack: false
+canAttackFlyingUnits: false
+canAttackLandUnits:   false
+canAttackUnderwaterUnits: false
+
+turretSize: 0
+turretTurnSpeed: 20
+
+
+maxAttackRange: 1
+shootDelay: 1
+
+
+[projectile_1]
+areaDamage: 5
+areaRadius: 32
+targetGround:true
+explodeOnEndOfLife:true
+image:null.png
+life: 0
+speed: 0
+areaHitUnderwaterAlways:true
+
+explodeEffect:NONE
+explodeEffectOnShield:NONE
+
+[movement]
+movementType: NONE
+moveSpeed: 0
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.12
+joinsGroupFormations: false
+targetHeight:-1
+
+maxTurnSpeed: 0
+turnAcceleration: 0.4
+
+reverseSpeedPercentage:0
+
+
+

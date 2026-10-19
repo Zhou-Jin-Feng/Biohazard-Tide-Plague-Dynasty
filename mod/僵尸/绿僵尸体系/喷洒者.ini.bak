@@ -1,0 +1,244 @@
+//by蚟醛钯烨
+[core]
+name: 播撒者
+displayText: 播撒者
+displayDescription: 远程，范围杀伤，移动缓慢
+class: CustomUnitMetadata
+price: 4500
+maxHp: 6000
+mass: 5000
+unitsSpawnedOnDeath:腐蚀性液体*2,尸块*3,pdzb2*3
+armour:5
+maxShield:50
+shieldRegen:0.1
+shieldRenderRadius:0
+shieldDisplayOnlyDeflection:true
+techLevel: 1
+nanoFactorySpeed:0.1
+nanoRange:300
+fireTurretXAtSelfOnDeath:D
+
+
+buildSpeed: 0.01
+availableInDemo: false
+
+radius: 25
+displayRadius: 26
+isBio: true
+#unitsSpawnedOnDeath:尸块
+hideScorchMark:true
+selfRegenRate:0.1
+
+softCollisionOnAll: 15
+#unitsSpawnedOnDeath:sc2
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShock2
+
+
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShock2
+
+
+
+[graphics]
+imageScale: 0.5
+total_frames: 3
+image:        突变体222.png
+image_wreak:  NONE
+image_turret: NONE
+scaleImagesTo: 100
+#scaleTurretImagesTo: 9
+
+#AUTO
+image_shadow: AUTO
+shadowOffsetX:1
+shadowOffsetY:1
+
+animation_moving_start: 0
+animation_moving_end: 2
+animation_moving_speed: 10
+
+animation_idle_start: 0
+animation_idle_end: 0
+
+
+animation_attack_start: 1
+animation_attack_end: 2
+animation_attack_speed: 5
+
+[attack]
+
+isMelee: true
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+isFixedFiring: true
+turretSize: 20
+turretTurnSpeed: 3
+maxAttackRange: 320
+shootDelay: 45
+
+
+[turret_1]
+x: 0
+y: 0
+shoot_sound:F1.ogg
+shoot_sound_vol:0.2
+shoot_flame: CUSTOM:AA
+projectile:1
+
+[turret_2]
+#
+x: 0
+y: 10
+warmup: 10
+attachedTo: 1
+slave: true
+invisible: true
+projectile: 1
+shoot_flame: CUSTOM:AA
+
+[turret_3]
+x: 0
+y: 10
+warmup: 20
+attachedTo: 1
+slave: true
+invisible: true
+shoot_flame: CUSTOM:AA
+projectile:1
+
+
+[turret_4]
+x: 0
+y: 0
+warmup: 25
+attachedTo: 1
+slave: true
+invisible: true
+shoot_flame: CUSTOM:AA
+projectile:1
+
+[turret_D]
+x: 0
+y: 0
+shoot_sound:P1.ogg
+shoot_sound_vol:0.5
+canShoot: false
+projectile:D
+
+[projectile_1]
+directDamage: 60
+life: 150
+speed: 3.2
+
+image: 06.png
+color: #008000
+
+drawSize: 0.4
+
+lightColor: #228B22
+lightSize: 0.4
+spawnUnit: 小腐蚀性液体
+targetGround:true
+targetGroundSpread: 15
+areaDamage: 45
+areaRadius: 30
+areaHitAirAndLandAtSameTime: true
+areaHitUnderwaterAlways:true
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[projectile_D]
+directDamage: 0
+life: 50
+instant: true
+spawnUnit: sc2*1
+#targetGround:true
+#targetGroundSpread: 10
+areaDamage: 130
+areaRadius: 100
+#areaHitAirAndLandAtSameTime: true
+
+explodeEffect:CUSTOM:lightningShock2
+explodeEffectOnShield:CUSTOM:lightningShock2
+
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:感染特效.png
+total_frames: 14
+animateFrameStart: 0
+animateFrameEnd: 13
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+scaleFrom: 0.75
+scaleTo: 0.75
+
+
+[effect_lightningShock2]
+life: 120
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DUW.png
+total_frames: 7
+animateFrameStart: 0
+animateFrameEnd: 6
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.3
+scaleTo: 0.4
+
+[effect_AA]
+priority:high
+image: 05.png
+life: 30
+fadeOut: true
+attachedToUnit: true
+color: #63e6e8
+scaleFrom: 0.2
+scaleTo: 0.3
+alpha: 0.8
+drawUnderUnits:false
+ySpeedRelative:3
+
+[movement]
+movementType: LAND
+moveSpeed: 0.99
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.12
+
+
+maxTurnSpeed: 5.5
+turnAcceleration: 0.5
+
+moveSlidingMode :true
+moveIgnoringBody:true
+moveSlidingDir:  181
+
+[ai]
+buildPriority:5
+ai_upgradePriority:1
+maxEachBase:15

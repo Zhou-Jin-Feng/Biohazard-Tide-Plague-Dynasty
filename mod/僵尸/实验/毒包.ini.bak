@@ -1,0 +1,212 @@
+//by蚟醛钯烨
+[core]
+name: 毒包
+class: CustomUnitMetadata
+price: 0
+maxHp: 450
+
+armour: 20
+armourMinDamageToKeep: 1
+
+mass: -10
+unitsSpawnedOnDeath:腐蚀性液体
+maxShield: 20
+shieldRegen:1111
+shieldDisplayOnlyDeflection:true
+techLevel: 1
+buildSpeed: 0.0006
+#availableInDemo: true
+selfBuildRate:0.0006
+selfRegenRate:0.001
+generation_credits:15
+generation_delay:40
+
+radius: 18
+#displayRadius: 25
+isBio: false
+isBuilding: true
+
+
+softCollisionOnAll: 3
+#unitsSpawnedOnDeath:zb
+
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShockD
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShockD
+
+energyMax: 240
+energyRegen: -0.2
+
+transportSlotsNeeded: 420
+#LIGHT IT UP
+
+dieOnZeroEnergy: true
+explodeOnDeath: false
+hideScorchMark: true
+
+exit_x:0
+exit_y:-1
+
+[action_233]
+autoTrigger: true
+isVisible: false
+fireTurretXAtGround: 1
+fireTurretXAtGround_withOffset: 0,0
+
+[graphics]
+total_frames: 1
+
+image:        毒包.png
+image_back:   NONE
+image_wreak:  NONE
+
+scaleImagesTo: 25
+#scaleTurretImagesTo: 9
+
+#AUTO
+image_shadow: NONE
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+animation_idle_start: 0
+animation_idle_end: 0
+animation_idle_speed: 60
+animation_idle_scale_start:1
+animation_idle_scale_end:1.5
+animation_idle_pingPong: true
+
+
+animation_attack_start: 0
+animation_attack_end: 0
+animation_attack_speed: 15
+animation_attack_scale_start:1.2
+animation_attack_scale_end:0.9
+animation_attack_pingPong: true
+
+[attack]
+canAttack: true
+canAttackFlyingUnits: false
+canAttackLandUnits:   false
+canAttackUnderwaterUnits: false
+
+maxAttackRange: 120
+shootDelay: 30
+
+#disablePassiveTargeting: true
+
+aimOffsetSpread: 0
+
+[turret_1]
+#
+x: 0
+y: 0
+
+projectile: 1
+turnSpeedAcceleration: 1.0
+canShoot: true
+turnSpeed: 19
+
+
+[projectile_1]
+directDamage: 1
+life: 1
+instant: true
+spawnUnit: sc2
+targetGround: true
+targetGroundSpread: 1
+areaDamage: 30
+areaRadius: 10
+deflectionPower:-1
+#325
+shieldDamageMultiplier: 500
+areaExpandTime:110
+explodeOnEndOfLife: true
+areaHitAirAndLandAtSameTime: true
+#areaHitUnderwaterAlways: true
+#shouldRevealFog:true
+
+explodeEffect:NONE
+explodeEffectOnShield:NONE
+
+
+
+[effect_lightningShock]
+life: 120
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DUW.png
+total_frames: 7
+animateFrameStart: 0
+animateFrameEnd: 6
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.3
+scaleTo: 0.3
+
+
+
+[effect_lightningShockD]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DUW.png
+total_frames: 7
+animateFrameStart: 0
+animateFrameEnd: 6
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.6
+scaleTo: 0.7
+
+[effect_jammer]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:gas2.png
+total_frames: 12
+animateFrameStart: 0
+animateFrameEnd: 11
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+[movement]
+movementType: AIR
+moveSpeed: 0
+
+maxTurnSpeed: 0
+
+targetHeight: -1
+targetHeightDrift: 0.9
+
+moveSlidingMode :true
+moveIgnoringBody: true

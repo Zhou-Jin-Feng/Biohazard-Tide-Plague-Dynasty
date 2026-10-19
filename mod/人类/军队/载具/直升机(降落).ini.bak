@@ -1,0 +1,97 @@
+﻿
+[core]
+name: 直升机(降落)
+class: CustomUnitMetadata
+price: 7500
+maxHp: 850
+mass: 1500
+shieldRenderRadius:0
+techLevel: 2
+
+buildSpeed: 0.0005
+#availableInDemo: true
+
+radius: 30
+displayRadius: 30
+experimental: true
+
+isBio: false
+
+isBuilding: true
+
+
+action_1_convertTo: 直升机
+action_1_price: 0
+action_1_text: 起飞
+action_1_displayType: upgrade
+action_1_buildSpeed: 0.02
+action_1_pos: 0.04
+
+#buildingSelectionOffset: 23
+maxTransportingUnits: 2
+transportUnitsRequireTag: 民兵
+softCollisionOnAll:300
+transportUnitsKillOnDeath:false
+[graphics]
+total_frames: 1
+imageScale: 0.5
+image:        黑鹰直升机.png
+image_wreak:   黑鹰直升机残骸.png
+image_turret: 螺旋桨2.png
+
+scaleImagesTo: 120
+scaleTurretImagesTo: 120
+
+image_shadow: AUTO
+
+shadowOffsetX:1
+shadowOffsetY:1
+
+[attack]
+
+canAttack: false
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+maxAttackRange: 260
+shootDelay: 10
+isFixedFiring: true
+turretTurnSpeed: 4
+
+[turret_1]
+#main turret
+x: 0
+y: 21
+canShoot: false
+#idleDir:45
+#shouldResetTurret: false
+idleSpin: 25
+
+
+
+[projectile_2]
+directDamage: 71
+life: 80
+speed: 15
+frame: 19
+
+
+
+[movement]
+movementType: LAND
+moveSpeed: 1.87
+moveAccelerationSpeed: 0.09
+moveDecelerationSpeed: 0.09
+reverseSpeedPercentage:  0.35
+
+maxTurnSpeed: 0
+turnAcceleration: 0.2
+
+moveSlidingMode :true
+moveIgnoringBody:true
+
+
+
+
+
+

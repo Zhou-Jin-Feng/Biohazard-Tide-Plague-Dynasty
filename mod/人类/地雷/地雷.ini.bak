@@ -1,0 +1,127 @@
+﻿
+[core]
+name: 地雷
+#displayDescription: 
+class: CustomUnitMetadata
+price: 20
+maxHp: 200
+mass: 100
+fireTurretXAtSelfOnDeath:D
+techLevel: 1
+buildSpeed: 0.005
+nanoRepairSpeed:1
+nanoFactorySpeed:10
+#availableInDemo: true
+
+radius: 12
+isBio: false
+isBug: false
+disableAllUnitCollisions:true
+canNotBeDirectlyAttacked:true
+isUnselectable:true
+
+numBitsOnDeath: 30
+
+
+softCollisionOnAll: 80
+energyMax: 20
+energyRegen: 0
+dieOnZeroEnergy: true
+builtFrom_1_name: 民兵(冲锋枪)
+builtFrom_1_pos:  1
+#builtFrom_1_isLocked:if not numberOfUnitsInTeam(withTag='补给站' , greaterThan=0)
+#builtFrom_1_isLockedMessage:需要补给站
+
+builtFrom_2_name: 武装工人
+builtFrom_2_pos:  2
+
+[graphics]
+imageScale: 1.1
+total_frames: 1
+image:        地雷.png
+image_wreak:  NONE
+image_turret: NONE
+#scaleImagesTo: 20
+#scaleTurretImagesTo: 9
+
+#AUTO
+image_shadow: AUTO
+shadowOffsetX:0
+shadowOffsetY:0
+
+
+
+[attack]
+canAttack: true
+canAttackFlyingUnits: false
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: true
+
+turretSize: 0
+turretTurnSpeed: 20
+
+dieOnAttack: true
+maxAttackRange: 60
+shootDelay: 200
+
+[turret_1]
+
+x: 0
+y: 0
+
+#shoot_sound:1.wav
+#shoot_sound_vol:1
+warmup:40
+chargeEffectImage: charge.png
+energyUsage: 20
+projectile:0
+#canShoot: true
+
+[turret_D]
+
+x: 0
+y: 0
+
+#shoot_sound:unit_explode
+#shoot_sound_vol:1
+#chargeEffectImage: charge.png
+canShoot: false
+projectile:1
+
+[projectile_0]
+#mine
+areaDamage: 0
+areaRadius: 0
+#targetGround:true
+#largeHitEffect: true
+life: 50
+instant:true
+explodeEffect:NONE
+explodeEffectOnShield:NONE
+
+[projectile_1]
+#mine
+areaDamage: 500
+areaRadius: 90
+targetGround:true
+largeHitEffect: true
+life: 50
+instant:true
+areaHitAirAndLandAtSameTime: true
+areaHitUnderwaterAlways:true
+
+[movement]
+movementType: NONE
+moveSpeed: 0
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.12
+joinsGroupFormations: false
+targetHeight:-1
+
+maxTurnSpeed: 0
+turnAcceleration: 0.4
+
+reverseSpeedPercentage:0
+
+
+

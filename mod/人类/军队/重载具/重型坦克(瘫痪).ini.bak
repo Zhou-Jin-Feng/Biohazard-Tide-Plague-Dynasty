@@ -1,0 +1,206 @@
+﻿
+[core]
+name: 重型坦克(瘫痪)
+class: CustomUnitMetadata
+price: 15000
+maxHp: 9500
+armour:50
+maxShield:45
+shieldRegen:11111111
+shieldRenderRadius:0
+shieldDisplayOnlyDeflection:true
+mass: 2880000
+
+tags=重型坦克
+
+#generation_credits:-650
+#generation_delay:3600
+techLevel: 1
+buildSpeed: 0.0001
+#availableInDemo: true
+experimental: true
+radius: 40
+#displayRadius: 23
+isBio: false
+softCollisionOnAll: 0
+
+maxTransportingUnits: 2
+transportUnitsRequireTag: 民兵
+transportUnitsKillOnDeath:false
+
+[action_自动维护]
+price:0
+autoTrigger:if self.timeAlive(laterThanSeconds=8)
+#buildSpeed:1s
+addResources:unsetFlag=5
+#isVisible:if self.hasFlag(id=5)
+#isActive:if self.hasFlag(id=5)
+#canPlayerCancel:false
+convertTo: 重型坦克
+isVisible:false
+pos=1
+
+[action_手动维护]
+price:0
+buildSpeed:3s
+addResources:unsetFlag=5
+isVisible:true
+isActive:true
+canPlayerCancel:false
+convertTo: 重型坦克
+text:恢复动力
+pos=2
+
+[graphics]
+total_frames: 1
+imageScale: 0.50
+image:        重型车盘.png
+image_wreak:  重型车盘残骸.png
+image_turret: 重型炮台.png
+
+scaleImagesTo: 95
+scaleTurretImagesTo: 32.5
+
+image_shadow: AUTO
+shadowOffsetX:1
+shadowOffsetY:1
+
+animation_moving_start: 0
+animation_moving_end: 0
+animation_moving_speed:8
+animation_idle_start: 0
+animation_idle_end: 0
+
+
+[attack]
+canAttack: false
+canAttackFlyingUnits: false
+canAttackLandUnits:   false
+canAttackUnderwaterUnits: false
+
+turretSize: 70
+turretTurnSpeed: 0
+
+
+maxAttackRange: 350
+shootDelay: 70
+
+[turret_01]
+#forward turret
+#invisible: true
+delay: 7
+x: 13
+y: 15
+image:机炮.png
+size:10
+canAttackLandUnits: if self.transportingCount(greaterThan=0)
+canAttackFlyingUnits: if self.transportingCount(greaterThan=0)
+shoot_sound:gun_fire
+shoot_sound_vol:0.5
+projectile: 0
+
+[turret_02]
+#forward turret
+#invisible: true
+delay: 7
+x: -13
+y: 10
+image:机炮.png
+size:15
+canAttackLandUnits: if self.transportingCount(greaterThan=1)
+canAttackFlyingUnits: if self.transportingCount(greaterThan=1)
+shoot_sound:gun_fire
+shoot_sound_vol:0.5
+projectile: 0
+
+[turret_1]
+#main turret
+x: 0
+y: -5
+canShoot: false
+
+[turret_2]
+x: 9
+y: 10
+attachedTo: 1
+slave: true
+invisible: true
+warmup: 5
+
+invisible: true
+idleDir:0
+shoot_sound:large_gun_fire2
+shoot_sound_vol:2
+shoot_flame:large
+shoot_light:#FFEECCCC
+projectile: 1
+
+
+[turret_3]
+x: -9
+y: 10
+attachedTo: 1
+slave: true
+invisible: true
+
+warmup:35
+idleDir:0
+invisible: true
+shoot_sound:large_gun_fire2
+shoot_sound_vol:2
+shoot_flame:large
+shoot_light:#FFEECCCC
+projectile: 2
+
+[projectile_0]
+directDamage: 0
+life: 80
+speed: 16
+image: 炮弹1.png
+drawSize: 0.35
+areaDamage: 50
+areaRadius: 20
+
+[projectile_1]
+directDamage:1000
+life: 500
+speed:18
+trailEffect: true
+largeHitEffect: true
+image: 炮弹1.png
+drawSize: 0.5
+largeHitEffect: true
+areaDamage: 500
+areaRadius: 90
+
+
+
+[projectile_2]
+directDamage:1400
+life: 500
+speed:18
+trailEffect: true
+largeHitEffect: true
+image: 炮弹1.png
+drawSize: 0.5
+largeHitEffect: true
+areaDamage: 100
+areaRadius: 50
+
+[movement]
+movementType: LAND
+moveSpeed: 0
+moveAccelerationSpeed: 0.05
+moveDecelerationSpeed: 0.13
+
+maxTurnSpeed: 0
+turnAcceleration: 0.4
+
+moveSlidingMode :false
+moveIgnoringBody:false
+
+
+
+
+
+

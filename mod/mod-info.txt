@@ -1,0 +1,6 @@
+[mod]
+
+title: [Plague Dynasty mod][生化狂潮mod] v1.97 经典完美版
+description: 经典原汁原味版(包含绿色动力装甲特种战士、红绿卵升级抓人、草履虫建筑师、大本爆史前触手怪、雷达站福利)
+tags: Units
+thumbnail: mod.png

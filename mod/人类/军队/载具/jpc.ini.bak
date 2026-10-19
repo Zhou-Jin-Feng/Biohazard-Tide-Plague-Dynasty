@@ -1,0 +1,119 @@
+﻿
+[core]
+name: jpc
+displayText: 吉普车
+displayDescription:能快速移动的载具，可搭载2人
+class: CustomUnitMetadata
+price: 900
+maxHp: 1000
+mass: 1200
+maxShield:15
+shieldRegen:1111
+shieldDisplayOnlyDeflection:true
+shieldRenderRadius:0
+techLevel: 1
+buildSpeed: 0.001
+#availableInDemo: true
+radius: 25
+displayRadius: 30
+isBio: false
+tags:载具
+selfRegenRate:0.0009
+#buildingSelectionOffset: 23
+maxTransportingUnits: 2
+transportUnitsRequireTag: 民兵
+softCollisionOnAll: 12
+transportUnitsKillOnDeath:false
+
+fogOfWarSightRange: 22
+[action_瘫痪]
+autoTrigger:if self.hasFlag(id=5)
+#addResources:setFlag=0
+isVisible: false          
+convertTo: jpc(瘫痪)
+pos=1
+
+[graphics]
+imageScale: 0.5
+total_frames: 1
+image:        悍马.png
+image_wreak:  悍马残骸.png
+image_turret: 重机枪1.png
+scaleImagesTo: 43
+scaleTurretImagesTo: 15
+
+#AUTO
+image_shadow: AUTO
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+[attack]
+
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: true
+
+isFixedFiring: false
+
+turretSize: 10
+turretTurnSpeed: 3
+
+maxAttackRange: 210
+shootDelay: 7
+
+[turret_1]
+x: 0
+y: 0
+shoot_sound:.50.ogg
+shoot_sound_vol:0.65
+energyUsage: 0
+projectile: 1
+[turret_瘫痪]
+x:0
+y:0
+turnSpeed: 4000
+warmup:0
+invisible:true
+resourceUsage: setFlag=5
+interceptProjectiles_withTags:瘫痪
+#interceptProjectiles_andTargetingGroundUnderDistance:50
+interceptProjectiles_andUnderDistance:70
+#interceptProjectiles_andOverHeight:0
+canAttackCondition:if not self.hasFlag(id=5)
+projectile:瘫痪
+limitingRange:70
+canShoot:false
+
+[projectile_瘫痪]
+directDamage: 0
+life: 0
+speed: 0
+
+frame: 1
+
+drawSize: 0
+explodeEffect:NONE
+explodeEffectOnShield:NONE
+
+[projectile_1]
+directDamage: 45
+life: 80
+speed: 16
+image: 炮弹1.png
+drawSize: 0.35
+
+
+[movement]
+movementType: LAND
+moveSpeed:2.6
+moveAccelerationSpeed: 0.17
+moveDecelerationSpeed: 0.07
+maxTurnSpeed: 3
+turnAcceleration: 0.5
+
+[ai]
+buildPriority:5
+maxGlobal:3
+maxEachBase:3

@@ -1,0 +1,170 @@
+
+[core]
+name: tanke
+displayText: 坦克
+displayDescription:强大的战争机器，\n搭载士兵可解锁机枪
+class: CustomUnitMetadata
+
+price: 7500
+maxHp: 5000
+mass: 1880000
+
+armour:30
+armourMinDamageToKeep: 0
+
+maxShield:45
+shieldRegen:11111111
+shieldDisplayOnlyDeflection:true
+shieldRenderRadius:0
+tags:载具
+
+techLevel: 1
+buildSpeed: 0.0004
+#availableInDemo: true
+#experimental: true
+radius: 35
+displayRadius: 40
+isBio: false
+softCollisionOnAll: 0
+
+
+#buildingSelectionOffset: 23
+maxTransportingUnits: 1
+transportUnitsRequireTag: 民兵
+transportUnitsKillOnDeath:false
+
+[action_瘫痪]
+autoTrigger:if self.hasFlag(id=5)
+#addResources:setFlag=0
+isVisible: false          
+convertTo: tanke(瘫痪)
+pos=1
+
+[graphics]
+total_frames: 1
+imageScale: 0.5
+image:        车盘3.png
+image_wreak:  车盘3残骸.png
+image_turret: p3.png
+
+scaleImagesTo: 85
+scaleTurretImagesTo: 35
+
+image_shadow: AUTO
+shadowOffsetX:1
+shadowOffsetY:1
+
+animation_moving_start: 0
+animation_moving_end: 0
+animation_moving_speed:8
+animation_idle_start: 0
+animation_idle_end: 0
+
+
+[attack]
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+
+turretSize: 20
+turretTurnSpeed: 1
+
+
+maxAttackRange: 350
+shootDelay: 170
+
+[turret_1]
+#forward turret
+invisible: true
+delay: 5
+x: 1
+y: 0
+canAttackLandUnits: if self.transportingCount(greaterThan=0)
+canAttackFlyingUnits: if self.transportingCount(greaterThan=0)
+shoot_sound:gun_fire
+shoot_sound_vol:0.5
+projectile: 1
+
+
+[turret_2]
+#forward turret
+x: 0
+y: 0
+warmup:5
+size: 43
+idleDir:0
+shoot_sound:large_gun_fire2
+shoot_sound_vol:2
+shoot_flame:large
+shoot_light:#FFEECCCC
+projectile: 2
+[turret_瘫痪]
+x:0
+y:0
+turnSpeed: 4000
+warmup:0
+invisible:true
+resourceUsage: setFlag=5
+interceptProjectiles_withTags:瘫痪
+#interceptProjectiles_andTargetingGroundUnderDistance:50
+interceptProjectiles_andUnderDistance:80
+#interceptProjectiles_andOverHeight:0
+canAttackCondition:if not self.hasFlag(id=5)
+projectile:瘫痪
+limitingRange:80
+canShoot:false
+
+[projectile_瘫痪]
+directDamage: 0
+life: 0
+speed: 0
+
+frame: 1
+
+drawSize: 0
+explodeEffect:NONE
+explodeEffectOnShield:NONE
+
+[projectile_1]
+directDamage: 20
+life: 80
+speed: 16
+
+image: 炮弹1.png
+drawSize: 0.35
+
+
+[projectile_2]
+directDamage:1000
+life: 500
+speed:10
+trailEffect: true
+largeHitEffect: true
+#frame: 11
+areaDamage: 500
+areaRadius: 75
+image: 炮弹1.png
+drawSize: 0.6
+
+[movement]
+movementType: LAND
+moveSpeed:1.7
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.07
+maxTurnSpeed: 2
+turnAcceleration: 0.17
+
+maxTurnSpeed: 1.7
+turnAcceleration: 0.4
+
+moveSlidingMode :false
+moveIgnoringBody:false
+
+
+
+[ai]
+buildPriority:4
+maxGlobal:3
+maxEachBase:3
+

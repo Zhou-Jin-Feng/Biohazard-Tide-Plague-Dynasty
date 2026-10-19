@@ -1,0 +1,238 @@
+//by蚟醛钯烨
+[core]
+name: 突变绿卵
+displayDescription: 作者:蚟醛钯烨\n(防傻逼盗mod专用水印)
+class: CustomUnitMetadata
+price: 5000
+maxHp: 4500
+mass: 9000
+maxShield:15
+shieldRegen:1111
+shieldDisplayOnlyDeflection:true
+techLevel: 1
+buildSpeed: 0.0006
+#availableInDemo: true
+selfBuildRate:0.0006
+selfRegenRate:0.001
+generation_credits:15
+generation_delay:40
+tags: 绿卵T2
+radius: 18
+#displayRadius: 25
+isBio: false
+isBuilding: true
+
+
+softCollisionOnAll: 3
+unitsSpawnedOnDeath:腐蚀性液体,zb4*5,尸坑
+
+explodeOnDeath:true
+effectOnDeath: CUSTOM:lightningShockD
+explodeOnDeathGroundCollosion:true
+effectOnDeathGroundCollosion: CUSTOM:lightningShockD
+
+
+exit_x:0
+exit_y:-1
+
+canBuild_0_name: setRally,尸潮2
+canBuild_0_pos:  0
+
+canBuild_1_name:zb
+canBuild_1_pos:  1
+
+canBuild_2_name:zb1
+canBuild_2_pos:  2
+
+canBuild_3_name:zb4
+canBuild_3_pos:  3
+
+canBuild_4_name:zbzb
+canBuild_4_pos:  4
+
+canBuild_5_name:pdzb,喷毒尸群,毒刺僵尸
+canBuild_5_pos:  5
+
+canBuild_6_name:尸群2
+canBuild_6_pos:  6
+
+canBuild_7_name:尸潮2
+canBuild_7_pos:  7
+
+
+canBuild_8_name:绿爬
+canBuild_8_pos:  8
+
+[action_防御]
+price:800,setFlag=3
+text:防御
+description:升级后能喷射毒液，反步兵
+displayType: action
+buildSpeed:2s
+addResources:setFlag=3
+isActive:if not self.hasFlag(id=3)
+canPlayerCancel:false
+pos=5
+
+[graphics]
+total_frames: 1
+
+image:        绿色卵泡.png
+image_back:   NONE
+image_wreak:  NONE
+
+#scaleImagesTo: 20
+#scaleTurretImagesTo: 9
+
+#AUTO
+image_shadow: NONE
+shadowOffsetX:1
+shadowOffsetY:1
+
+
+animation_idle_start: 0
+animation_idle_end: 0
+animation_idle_speed: 60
+animation_idle_scale_start:1
+animation_idle_scale_end:1.5
+animation_idle_pingPong: true
+
+
+animation_attack_start: 0
+animation_attack_end: 0
+animation_attack_speed: 15
+animation_attack_scale_start:1.2
+animation_attack_scale_end:0.9
+animation_attack_pingPong: true
+
+[attack]
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+
+turretSize: 20
+turretTurnSpeed: 2
+
+
+
+maxAttackRange: 300
+shootDelay: 80
+
+[turret_1]
+#
+x: 0
+y: -10
+projectile: 1
+turnSpeedAcceleration: 1.0
+shoot_sound:cannon_firing
+shoot_sound_vol:0.3
+shoot_flame:small
+shoot_light:#228B22
+
+canAttackCondition:if self.hasFlag(id=3)
+
+[turret_2]
+#
+x: 0
+y: -10
+attachedTo: 1
+
+slave: true
+
+invisible: true
+copyFrom:1
+
+[turret_3]
+#
+x: 0
+y: -10
+attachedTo: 1
+
+slave: true
+
+invisible: true
+copyFrom:1
+
+[projectile_1]
+directDamage: 30
+life: 150
+speed: 4
+spawnUnit:小腐蚀性液体
+image: 毒液.png
+color: #008000
+explodeOnEndOfLife:true
+drawSize: 0.7
+
+areaDamage: 20
+areaRadius: 60
+
+targetGround: false
+
+lightColor: #228B22
+lightSize: 0.9
+
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:感染特效.png
+total_frames: 14
+animateFrameStart: 0
+animateFrameEnd: 13
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+
+[effect_lightningShockD]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:DUW.png
+total_frames: 7
+animateFrameStart: 0
+animateFrameEnd: 6
+animateFramePingPong: false
+animateFrameSpeed: 0.25
+scaleFrom: 0.8
+scaleTo: 0.9
+
+[movement]
+movementType: NONE
+moveSpeed: 0
+moveAccelerationSpeed: 0.01
+moveDecelerationSpeed: 0.01
+
+maxTurnSpeed: 0
+turnAcceleration: 0.1
+
+
+
+
+[ai]
+
+buildPriority: 4
+maxGlobal:2
+maxEachBase: 1

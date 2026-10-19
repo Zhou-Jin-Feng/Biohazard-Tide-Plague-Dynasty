@@ -1,0 +1,127 @@
+//by蚟醛钯烨
+[core]
+name: 尸坑
+#displayDescription: 
+class: CustomUnitMetadata
+price: 5000
+maxHp: 60
+mass: 100
+techLevel: 1
+buildSpeed: 0.005
+#availableInDemo: true
+
+armour: 9999
+armourMinDamageToKeep: 1
+radius: 1
+isBio: false
+isBug: false
+disableAllUnitCollisions:true
+canNotBeDirectlyAttacked:true
+#isUnselectable:true
+hideScorchMark:true
+
+#numBitsOnDeath: 10
+
+
+explodeOnDeath:false
+effectOnDeath: NONE
+explodeOnDeathGroundCollosion:false
+effectOnDeathGroundCollosion: NONE
+softCollisionOnAll: 80
+selfBuildRate:0.1
+#[action_233333]
+#autoTrigger:true
+#isVisible: false
+#fireTurretXAtGround: 1
+#fireTurretXAtGround_withOffset: 0,10
+
+[action_淡化]
+autoTrigger:if self.timeAlive(laterThanSeconds=300)
+addResources=hp=-999999
+isVisible:false
+pos=1
+
+
+[graphics]
+imageScale: 1.1
+total_frames: 1
+image:        尸坑.png
+image_wreak:  NONE
+#image_turret: 06.png
+#scaleImagesTo: 20
+#scaleTurretImagesTo: 9
+
+teamColorsUseHue:false
+teamColorsOnTurret:false
+
+#AUTO
+image_shadow: AUTO
+shadowOffsetX:0
+shadowOffsetY:0
+
+
+
+[attack]
+canAttack: true
+canAttackFlyingUnits: false
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: true
+
+turretSize: 0
+turretTurnSpeed: 20
+
+
+maxAttackRange: 1200
+shootDelay: 3600
+
+[turret_1]
+
+x: 0
+y: 0
+canShoot: false
+#invisible: true
+turnSpeed:0
+
+[turret_2]
+
+x: 0
+y: 0
+projectile:1
+#canShoot: false
+invisible: true
+
+[projectile_1]
+areaDamage: 10
+areaRadius: 62
+targetGround:true
+explodeOnEndOfLife:true
+image:none.png
+life: 0
+speed: 0
+areaHitUnderwaterAlways:true
+spawnUnit: 混合尸潮
+
+explodeEffect:NONE
+explodeEffectOnShield:NONE
+
+[movement]
+movementType: NONE
+moveSpeed: 0
+moveAccelerationSpeed: 0.07
+moveDecelerationSpeed: 0.12
+joinsGroupFormations: false
+targetHeight:-1
+
+maxTurnSpeed: 0
+turnAcceleration: 0.4
+
+reverseSpeedPercentage:0
+
+
+
+[ai]
+#迫害米斯达的4
+maxEachBase:4
+buildPriority:4
+maxGlobal:4
+

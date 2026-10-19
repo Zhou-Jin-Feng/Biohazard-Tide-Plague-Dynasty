@@ -1,0 +1,176 @@
+[core]
+name: 轻机枪阵地
+class: CustomUnitMetadata
+price: 200
+maxHp: 120
+mass: 90000
+techLevel: 1
+buildSpeed: 0.35
+energyMax: 70
+energyRegen: 8
+energyNeedsToRechargeToFull: true
+unitsSpawnedOnDeath:民兵(轻机枪)
+radius: 18
+isBio: false
+nanoRange:100
+selfBuildRate:0.02
+selfRegenRate:0.001
+softCollisionOnAll: 15
+isBuilding: true
+
+dieOnConstruct: true
+
+armour:25
+maxShield:220
+shieldRegen:0.01
+shieldDisplayOnlyDeflection:true
+
+action_1_convertTo: 民兵(轻机枪)
+action_1_price: 0
+action_1_text: 撤出阵地
+action_1_displayType: upgrade
+action_1_buildSpeed: 0.004
+action_1_pos: 0.02
+
+effectOnDeath:CUSTOM:SW, CUSTOM:X*7
+
+[effect_SW]
+life: 0
+fadeInTime: 0
+fadeOut: false
+alsoPlaySound: S1.ogg:0.5, S2.ogg:0.5, S3.ogg:0.5
+
+[effect_X]
+attachedToUnit: false
+life: 60
+physics: true
+scaleFrom:0.03
+scaleTo: 0.01
+xSpeedRelativeRandom: 0.7
+ySpeedRelativeRandom: 0.7
+hSpeed: 1
+image: X.png
+drawUnderUnits:false
+
+[action_trigger_HP]
+autoTrigger: if self.hp(lessThan=100)
+
+convertTo: 民兵(轻机枪)
+buildSpeed: 0
+text: TRIGGER
+isVisible: false
+
+[graphics]
+imageScale: 0.5
+scaleTurretImagesTo: 30
+image:        mjdb.png
+image_wreak:  mjdb.png
+image_turret: 民兵(轻机枪).png
+image_shadow: NONE
+shadowOffsetX:1
+shadowOffsetY:1
+
+[attack]
+canAttack: true
+canAttackFlyingUnits: true
+canAttackLandUnits:   true
+canAttackUnderwaterUnits: false
+turretSize: 5
+turretTurnSpeed: 9
+maxAttackRange: 240
+shootDelay:15
+
+
+[turret_1]
+x:0
+y:0
+shouldResetTurret: false
+shoot_sound:gun_fire
+shoot_sound_vol:0.65
+projectile:1
+
+[turret_2]
+x: 0
+y: 0
+shouldResetTurret: false
+invisible: true
+warmup:12
+
+shoot_flame:small
+shoot_light:#FFccCCEE
+projectile:2
+
+
+[turret_3]
+x:0
+y:0
+shouldResetTurret: false
+invisible: true
+warmup:3
+
+projectile:1
+
+[turret_4]
+x:0
+y:0
+shouldResetTurret: false
+invisible: true
+warmup:6
+
+projectile:1
+
+[projectile_1]
+directDamage: 1
+life: 80
+speed: 7
+image: 炮弹1.png
+drawSize: 0.35
+
+targetGround:true
+targetGroundSpread: 15
+areaDamage: 20
+areaRadius: 60
+areaHitAirAndLandAtSameTime: true
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[projectile_2]
+directDamage:50
+life:100
+speed:12
+
+image: 炮弹1.png
+drawSize: 0.35
+
+
+explodeEffect:CUSTOM:lightningShock
+explodeEffectOnShield:CUSTOM:lightningShock
+
+[effect_lightningShock]
+life: 60
+
+
+hOffset: 0
+dirOffset: 0
+
+fadeInTime: 0
+fadeOut: false
+
+attachedToUnit: true
+
+
+image:damage.png
+total_frames: 12
+animateFrameStart: 0
+animateFrameEnd: 11
+animateFramePingPong: false
+animateFrameSpeed: 0.5
+
+[movement]
+movementType: LAND
+moveSpeed: 0.8
+moveAccelerationSpeed: 0.06
+moveDecelerationSpeed: 0.17
+maxTurnSpeed: 2.1
+turnAcceleration: 0.5

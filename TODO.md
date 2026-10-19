@@ -143,3 +143,24 @@
     1. **T2 狙击塔** (convertTo: 狙击塔T2)：立即获得 1 座 T2 狙击塔，强化基地开局防御。
     2. **T1 熔炉** (convertTo: 熔炉)：立即获得 1 座 T1 熔炉，快速建立前期经济。
     3. **2000 资金** (ddResources: credits=2000, deleteSelf: true)：立即获得 2000 资金，灵活调配前期建设并自动清理占位。
+
+
+---
+
+## 七、经济与防御建筑科技锁及等级修正（第2批 已完成实施）
+
+### 1. 熔炉建筑升级锁与科技等级 (mod/人类/一本科技/)
+- **T1 熔炉 (rl.ini)**：升级为 2级熔炉动作增加前置科技锁 ction_1_isLocked: if not numberOfUnitsInTeam(withTag='T2', greaterThan=0)，未升级到人类阵营 T2 禁止升级。
+- **T2 熔炉 (rl2.ini)**：	echLevel 修正为 2；升级为 3级熔炉动作增加前置科技锁 ction_1_isLocked: if not numberOfUnitsInTeam(withTag='T3', greaterThan=0)，未升级到人类阵营 T3 禁止升级。
+- **T3 熔炉 (rl3.ini)**：	echLevel 修正为 3。
+
+### 2. 补给站建造与升级体系 (mod/人类/二本科技/)
+- **T1 补给站 (补给站.ini)**：	echLevel 修正为 2（仅由 T2 工人建造，归属二本经济）。
+- **T2 补给站 (补给站T2.ini)**：	echLevel 修正为 2；升级为 3级补给站动作增加前置科技锁 ction_1_isLocked: if not numberOfUnitsInTeam(withTag='T3', greaterThan=0)，未升级到人类阵营 T3 禁止升级。
+- **T3 补给站 (补给站T3.ini)**：	echLevel 修正为 3。
+
+### 3. 防御设施与灭活装置门槛调整
+- **基础狙击塔 (mod/人类/军队/建筑/wlbzdt.ini)**：升级为 2级狙击塔增加前置科技锁 ction_1_isLocked: if not numberOfUnitsInTeam(withTag='T2', greaterThan=0)，需要人类阵营 T2。
+- **T2 狙击塔 (mod/人类/军队/建筑/狙击塔T2.ini)**：	echLevel 修正为 2。
+- **1级灭活装置 (mod/人类/灭活装置/灭活装置.ini)**：修复 uiltFrom_1_name 笔误为 工人,工人T2,工人T3；升级为 2级灭活装置增加前置科技锁 ction_1_isLocked: if not numberOfUnitsInTeam(withTag='T3', greaterThan=0)，需要人类阵营 T3。
+- **2级灭活装置 (mod/人类/灭活装置/灭活装置T2.ini)**：	echLevel 修正为 3；开放 uiltFrom_1_name: 工人T3，仅允许 T3 工人（建筑机器人）直接建造。

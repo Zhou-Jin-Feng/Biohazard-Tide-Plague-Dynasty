@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生化狂潮：瘟疫王朝 · 阵营科技演进树</title>
+  <style>
+    :root {
+      --bg: #070a13;
+      --grid-line: rgba(255, 255, 255, 0.035);
+      --card-bg: rgba(15, 23, 42, 0.88);
+      --card-border: rgba(148, 163, 184, 0.18);
+      --card-hover: rgba(30, 41, 59, 0.98);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --cyan: #06b6d4;
+      --blue: #3b82f6;
+      --amber: #f59e0b;
+      --purple: #a855f7;
+      --green: #10b981;
+      --line-upgrade: #06b6d4;
+      --line-build: rgba(148, 163, 184, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background-color: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif;
+      color: var(--text-main);
+    }
+    header {
+      position: absolute; top: 0; left: 0; right: 0; height: 60px;
+      background: rgba(9, 13, 22, 0.92); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 24px; z-index: 100;
+    }
+    .brand-wrap { display: flex; align-items: center; gap: 12px; }
+    .brand-logo { font-size: 24px; filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.7)); }
+    .brand-title {
+      font-size: 16px; font-weight: 700; letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #fff 40%, var(--cyan) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .faction-switch {
+      display: flex; background: rgba(15, 23, 42, 0.9); padding: 3px;
+      border-radius: 10px; border: 1px solid var(--card-border); gap: 4px;
+    }
+    .faction-tab {
+      padding: 6px 20px; font-size: 13px; font-weight: 600; border: none;
+      border-radius: 7px; cursor: pointer; color: var(--text-muted);
+      background: transparent; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
+    }
+    .faction-tab.active.human {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(59, 130, 246, 0.35));
+      color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.5);
+      box-shadow: 0 0 14px rgba(6, 182, 212, 0.3);
+    }
+    .faction-tab.active.zombie {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(168, 85, 247, 0.35));
+      color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.5);
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.3);
+    }
+    .viewport-controls { display: flex; align-items: center; gap: 8px; }
+    .ctrl-btn {
+      background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border);
+      color: var(--text-muted); width: 34px; height: 34px; border-radius: 8px;
+      cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;
+    }
+    .ctrl-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .zoom-text { font-size: 12px; color: var(--text-dim); min-width: 44px; text-align: center; font-family: ui-monospace, monospace; }
+    .nav-units {
+      font-size: 12px; color: var(--cyan); text-decoration: none; padding: 6px 12px;
+      border-radius: 7px; border: 1px solid rgba(6, 182, 212, 0.35);
+      background: rgba(6, 182, 212, 0.08); margin-left: 8px;
+    }
+    .legend-bar {
+      position: absolute; bottom: 20px; left: 24px;
+      background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border); border-radius: 10px;
+      padding: 8px 16px; display: flex; align-items: center; gap: 16px;
+      font-size: 12px; z-index: 90; color: var(--text-muted);
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-line { width: 22px; height: 3px; border-radius: 2px; }
+    .legend-line.upgrade { background: var(--line-upgrade); box-shadow: 0 0 6px var(--line-upgrade); }
+    .legend-line.build { background: var(--line-build); border-top: 1px dashed #94a3b8; height: 1px; }
+    #canvas-container {
+      width: 100%; height: 100%; cursor: grab; position: relative;
+      background-image: 
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    #canvas-container.panning { cursor: grabbing; }
+    #tree-world {
+      position: absolute; top: 0; left: 0;
+      transform-origin: 0 0; will-change: transform;
+    }
+    .tier-bands {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; display: flex; flex-direction: column;
+    }
+    .tier-band {
+      width: 100%; border-bottom: 2px dashed rgba(255, 255, 255, 0.08);
+      position: relative; box-sizing: border-box;
+    }
+    .tier-label-watermark {
+      position: absolute; top: 24px; left: 36px;
+      font-size: 48px; font-weight: 900; color: rgba(255, 255, 255, 0.04);
+      letter-spacing: 2px;
+    }
+    .tier-tag-pill {
+      position: absolute; top: 24px; left: 40px;
+      padding: 6px 16px; border-radius: 8px; font-size: 14px; font-weight: 700;
+      display: flex; align-items: center; gap: 8px; border: 1px solid transparent;
+    }
+    .tier-1 .tier-tag-pill { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border-color: rgba(59, 130, 246, 0.4); }
+    .tier-2 .tier-tag-pill { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4); }
+    .tier-3 .tier-tag-pill { background: rgba(168, 85, 247, 0.2); color: #c084fc; border-color: rgba(168, 85, 247, 0.4); }
+    #svg-connections {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 10;
+    }
+    path.conn-line {
+      fill: none; stroke-linecap: round;
+      transition: stroke 0.2s, stroke-width 0.2s, opacity 0.2s;
+    }
+    path.conn-upgrade {
+      stroke: var(--line-upgrade); stroke-width: 2.5px;
+      filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.5));
+    }
+    path.conn-build {
+      stroke: var(--line-build); stroke-width: 1.5px;
+      stroke-dasharray: 5 4;
+    }
+    path.conn-line.highlighted {
+      stroke: #38bdf8 !important; stroke-width: 4px !important;
+      filter: drop-shadow(0 0 10px #38bdf8) !important; opacity: 1 !important;
+    }
+    path.conn-line.dimmed { opacity: 0.1 !important; }
+    .tree-nodes-layer {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20;
+    }
+    .tree-node {
+      position: absolute; width: 204px; background: var(--card-bg);
+      border: 1px solid var(--card-border); border-radius: 12px;
+      padding: 10px 12px; cursor: pointer; display: flex; flex-direction: column;
+      gap: 6px; backdrop-filter: blur(8px);
+      transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s, opacity 0.2s;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+    }
+    .tree-node:hover {
+      background: var(--card-hover); border-color: rgba(56, 189, 248, 0.6);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(6, 182, 212, 0.4);
+      z-index: 50;
+    }
+    .tree-node.highlighted {
+      border-color: #38bdf8 !important;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.8) !important;
+      z-index: 60;
+    }
+    .tree-node.dimmed { opacity: 0.22; }
+    .tree-node.core-hub {
+      border-color: rgba(56, 189, 248, 0.5);
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(6, 182, 212, 0.15));
+    }
+    .tree-node.core-hub::after {
+      content: "★ 核心枢纽"; position: absolute; top: -9px; right: 12px;
+      background: #0ea5e9; color: #031424; font-size: 10px; font-weight: 800;
+      padding: 1px 6px; border-radius: 4px;
+    }
+    .node-header { display: flex; align-items: center; gap: 8px; }
+    .node-icon {
+      width: 36px; height: 36px; border-radius: 6px;
+      background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; overflow: hidden;
+    }
+    .node-icon img { max-width: 32px; max-height: 32px; object-fit: contain; image-rendering: pixelated; }
+    .node-title-box { flex: 1; min-width: 0; }
+    .node-title {
+      font-size: 13px; font-weight: 700; color: #fff;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .node-sub {
+      font-size: 10px; color: var(--text-dim); font-family: ui-monospace, monospace;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .node-body {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: var(--text-muted); border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 4px;
+    }
+    .node-stat { display: inline-flex; align-items: center; gap: 3px; }
+    .anchor-point {
+      position: absolute; width: 7px; height: 7px; border-radius: 50%;
+      background: #06b6d4; box-shadow: 0 0 6px #06b6d4; left: 50%; transform: translateX(-50%);
+    }
+    .anchor-in { top: -4px; }
+    .anchor-out { bottom: -4px; }
+    .drawer-backdrop {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px); z-index: 200; opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+    .drawer {
+      position: fixed; top: 0; right: -480px; width: 440px; max-width: 90vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px);
+      border-left: 1px solid var(--card-border); z-index: 201;
+      transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex; flex-direction: column; box-shadow: -10px 0 40px rgba(0,0,0,0.6);
+    }
+    .drawer.open { right: 0; }
+    .drawer-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--card-border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .drawer-title-group h2 { font-size: 17px; font-weight: 700; color: #fff; }
+    .drawer-title-group p { font-size: 11px; color: var(--text-dim); font-family: ui-monospace, monospace; }
+    .drawer-close {
+      background: rgba(255, 255, 255, 0.08); border: none; color: var(--text-muted);
+      width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 15px;
+    }
+    .drawer-body {
+      padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px;
+    }
+    .drawer-img-box {
+      text-align: center; background: rgba(0, 0, 0, 0.4); padding: 16px;
+      border-radius: 10px; border: 1px solid var(--card-border);
+    }
+    .drawer-img-box img { max-width: 120px; max-height: 120px; image-rendering: pixelated; }
+    .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .stat-cell {
+      background: rgba(30, 41, 59, 0.6); padding: 8px 12px;
+      border-radius: 7px; border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .stat-label { font-size: 11px; color: var(--text-dim); }
+    .stat-val { font-size: 14px; font-weight: 700; color: #fff; margin-top: 2px; }
+    .drawer-desc {
+      background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 12px;
+      font-size: 12px; color: #cbd5e1; white-space: pre-wrap; line-height: 1.6;
+      border-left: 3px solid var(--cyan);
+    }
+    .rel-group-title { font-size: 11px; font-weight: 700; color: var(--text-dim); margin-bottom: 6px; }
+    .rel-pill-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+    .rel-pill {
+      background: rgba(30, 41, 59, 0.8); border: 1px solid var(--card-border);
+      padding: 3px 8px; border-radius: 5px; font-size: 11px; color: #e2e8f0; cursor: pointer;
+    }
+    .rel-pill:hover { border-color: var(--cyan); color: #38bdf8; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-wrap">
+      <div class="brand-logo">🧬</div>
+      <div>
+        <div class="brand-title">生化狂潮：瘟疫王朝 · 阵营科技演化树</div>
+      </div>
+    </div>
+
+    <div class="faction-switch">
+      <button class="faction-tab active human" id="tab-human" onclick="setFaction('人类')">
+        🛡️ 人类科技演化树
+      </button>
+      <button class="faction-tab zombie" id="tab-zombie" onclick="setFaction('僵尸')">
+        ☣️ 异变感染演化树
+      </button>
+    </div>
+
+    <div class="viewport-controls">
+      <button class="ctrl-btn" onclick="zoomIn()" title="放大 (+)">＋</button>
+      <div class="zoom-text" id="zoom-val">85%</div>
+      <button class="ctrl-btn" onclick="zoomOut()" title="缩小 (-)">－</button>
+      <button class="ctrl-btn" onclick="resetView()" title="重置视角 (Space)">↺</button>
+      <a href="units.html" class="nav-units" style="font-weight:600;">📖 切换到图鉴</a>
+    </div>
+  </header>
+
+  <div class="legend-bar">
+    <div class="legend-item"><div class="legend-line upgrade"></div> 升级进化 (Upgrade)</div>
+    <div class="legend-item"><div class="legend-line build"></div> 设施建造/生产 (Build)</div>
+    <div style="margin-left: 10px; color: var(--text-dim);">💡 提示：按住鼠标左键可任意拖动画布，滚轮可缩放，鼠标悬停高亮关联线，点击卡片看详情</div>
+  </div>
+
+  <div id="canvas-container">
+    <div id="tree-world">
+      <div class="tier-bands" id="tier-bands"></div>
+      <svg id="svg-connections">
+        <defs>
+          <marker id="arrow-upgrade" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#06b6d4"></path>
+          </marker>
+          <marker id="arrow-build" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M 0 1 L 8 5 L 0 9 z" fill="#94a3b8"></path>
+          </marker>
+        </defs>
+      </svg>
+      <div class="tree-nodes-layer" id="tree-nodes"></div>
+    </div>
+  </div>
+
+  <div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawer()"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <h2 id="d-name">单位详情</h2>
+        <p id="d-id">unit_id</p>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </aside>
+
+  <script id="mod-units-data" type="application/json">
+__DATA_JSON__
+  </script>
+  <script>
+    const ALL_UNITS = JSON.parse(document.getElementById("mod-units-data").textContent);
+    const unitMap = {};
+    ALL_UNITS.forEach(u => { unitMap[u.name] = u; });
+
+    let currentFaction = "人类";
+    let scale = 0.8;
+    let panX = 40;
+    let panY = 70;
+    let isPanning = false;
+    let startX = 0;
+    let startY = 0;
+
+    const container = document.getElementById("canvas-container");
+    const world = document.getElementById("tree-world");
+    const svgLayer = document.getElementById("svg-connections");
+    const nodesLayer = document.getElementById("tree-nodes");
+    const bandsLayer = document.getElementById("tier-bands");
+
+    function applyTransform() {
+      world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+      document.getElementById("zoom-val").textContent = Math.round(scale * 100) + "%";
+    }
+
+    container.addEventListener("mousedown", (e) => {
+      if (e.target.closest(".tree-node") || e.target.closest("button") || e.target.closest("a")) return;
+      isPanning = true;
+      startX = e.clientX - panX;
+      startY = e.clientY - panY;
+      container.classList.add("panning");
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isPanning) return;
+      panX = e.clientX - startX;
+      panY = e.clientY - startY;
+      applyTransform();
+    });
+
+    window.addEventListener("mouseup", () => {
+      isPanning = false;
+      container.classList.remove("panning");
+    });
+
+    container.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+      const newScale = Math.min(Math.max(scale * zoomFactor, 0.35), 2.0);
+
+      const rect = container.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      panX = mouseX - (mouseX - panX) * (newScale / scale);
+      panY = mouseY - (mouseY - panY) * (newScale / scale);
+      scale = newScale;
+
+      applyTransform();
+    }, { passive: false });
+
+    function zoomIn() { scale = Math.min(scale * 1.15, 2.0); applyTransform(); }
+    function zoomOut() { scale = Math.max(scale * 0.85, 0.35); applyTransform(); }
+    function resetView() { scale = 0.8; panX = 40; panY = 70; applyTransform(); }
+
+    function setFaction(f) {
+      currentFaction = f;
+      document.getElementById("tab-human").classList.toggle("active", f === "人类");
+      document.getElementById("tab-zombie").classList.toggle("active", f === "僵尸");
+      resetView();
+      buildTechTree();
+    }
+
+    function buildTechTree() {
+      nodesLayer.innerHTML = "";
+      svgLayer.innerHTML = `
+        <defs>
+          <marker id="arrow-upgrade" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#06b6d4"></path>
+          </marker>
+          <marker id="arrow-build" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M 0 1 L 8 5 L 0 9 z" fill="#94a3b8"></path>
+          </marker>
+        </defs>
+      `;
+
+      if (currentFaction === "人类") {
+        buildHumanTree();
+      } else {
+        buildZombieTree();
+      }
+      applyTransform();
+    }
+
+    function buildHumanTree() {
+      const TIER_HEIGHT = 500;
+      const totalWidth = 2480;
+      const totalHeight = TIER_HEIGHT * 3 + 140;
+
+      world.style.width = totalWidth + "px";
+      world.style.height = totalHeight + "px";
+      svgLayer.setAttribute("width", totalWidth);
+      svgLayer.setAttribute("height", totalHeight);
+
+      bandsLayer.innerHTML = `
+        <div class="tier-band tier-1" style="height:${TIER_HEIGHT}px;">
+          <div class="tier-label-watermark">TIER 1</div>
+          <div class="tier-tag-pill">T1 基础阶段 · 生化防线</div>
+        </div>
+        <div class="tier-band tier-2" style="height:${TIER_HEIGHT}px;">
+          <div class="tier-label-watermark">TIER 2</div>
+          <div class="tier-tag-pill">T2 进阶工业 · 装甲与正规军</div>
+        </div>
+        <div class="tier-band tier-3" style="height:${TIER_HEIGHT}px;">
+          <div class="tier-label-watermark">TIER 3</div>
+          <div class="tier-tag-pill">T3 终极重工 · 决战机甲与外骨骼</div>
+        </div>
+      `;
+
+      const nodePositions = {};
+      const connections = [];
+
+      function place(name, x, y, isHub=false) {
+        nodePositions[name] = { x, y, isHub };
+      }
+
+      // T1 节点 (Y: 90 ~ 440)
+      place("ahx", 80, 90, true);
+      place("开局支援", 80, 240);
+
+      place("工人", 360, 90);
+      place("武装工人", 360, 240);
+
+      place("民兵营", 640, 90);
+      place("防爆盾兵", 900, 70);
+      place("民兵_冲锋枪", 900, 150);
+      place("民兵_轻机枪", 900, 230);
+      place("民兵_狙击枪", 900, 310);
+      place("民兵小队", 900, 390);
+
+      place("熔炉", 1720, 80);
+      place("难民营", 1720, 230);
+
+      place("狙击塔", 2000, 70);
+      place("碉堡", 2000, 150);
+      place("喷火器", 2000, 230);
+      place("地雷", 2000, 310);
+      place("围墙", 2000, 390);
+      place("灭活装置", 2000, 470);
+
+      // T2 节点 (Y: 590 ~ 950)
+      place("人类阵营T2", 80, 590, true);
+      place("工人T2", 360, 590);
+
+      place("步兵营", 640, 590);
+      place("步兵", 900, 560);
+      place("步兵_火箭筒", 900, 640);
+      place("步兵_机枪", 900, 720);
+      place("步兵_狙击枪", 900, 800);
+      place("暴风突击兵", 900, 880);
+      place("暴风侦察兵", 900, 960);
+
+      place("载具制造厂", 1180, 590);
+      place("机场", 1180, 770);
+      place("tanke", 1440, 560);
+      place("apc", 1440, 640);
+      place("装甲车", 1440, 720);
+      place("防空车", 1440, 800);
+      place("九头龙", 1440, 880);
+
+      place("熔炉T2", 1720, 590);
+      place("难民营T2", 1720, 720);
+      place("补给站", 1720, 840);
+      place("补给站T2", 1720, 960);
+
+      place("狙击塔T2", 2000, 590);
+      place("加特林炮台", 2000, 710);
+      place("导弹塔", 2000, 830);
+
+      // T3 节点 (Y: 1090 ~ 1450)
+      place("人类阵营T3", 80, 1090, true);
+      place("工人T3", 360, 1090);
+
+      place("军营", 640, 1090);
+      place("战术小队", 900, 1090);
+      place("man", 900, 1190);
+
+      place("高级工厂", 1180, 1090);
+      place("雷达", 1180, 1260);
+      place("重型坦克", 1440, 1090);
+      place("机甲", 1440, 1190);
+      place("小型机甲", 1440, 1290);
+
+      place("熔炉T3", 1720, 1090);
+      place("难民营T3", 1720, 1210);
+      place("补给站T3", 1720, 1330);
+
+      place("加特林炮台T2", 2000, 1090);
+      place("灭活装置T2", 2000, 1220);
+
+      // 连线配置
+      connections.push({ from: "ahx", to: "人类阵营T2", type: "upgrade" });
+      connections.push({ from: "人类阵营T2", to: "人类阵营T3", type: "upgrade" });
+      connections.push({ from: "ahx", to: "开局支援", type: "build" });
+
+      connections.push({ from: "ahx", to: "工人", type: "build" });
+      connections.push({ from: "工人", to: "武装工人", type: "upgrade" });
+      connections.push({ from: "人类阵营T2", to: "工人T2", type: "build" });
+      connections.push({ from: "人类阵营T3", to: "工人T3", type: "build" });
+
+      connections.push({ from: "民兵营", to: "步兵营", type: "upgrade" });
+      connections.push({ from: "步兵营", to: "军营", type: "upgrade" });
+
+      ["防爆盾兵", "民兵_冲锋枪", "民兵_狙击枪", "民兵_轻机枪", "民兵小队"].forEach(u => {
+        connections.push({ from: "民兵营", to: u, type: "build" });
+      });
+
+      ["步兵", "步兵_火箭筒", "步兵_机枪", "步兵_狙击枪", "暴风突击兵", "暴风侦察兵"].forEach(u => {
+        connections.push({ from: "步兵营", to: u, type: "build" });
+      });
+
+      ["战术小队", "man"].forEach(u => {
+        connections.push({ from: "军营", to: u, type: "build" });
+      });
+
+      connections.push({ from: "人类阵营T2", to: "载具制造厂", type: "build" });
+      connections.push({ from: "人类阵营T2", to: "机场", type: "build" });
+      connections.push({ from: "人类阵营T3", to: "高级工厂", type: "build" });
+      connections.push({ from: "人类阵营T3", to: "雷达", type: "build" });
+
+      ["tanke", "apc", "装甲车", "防空车", "九头龙"].forEach(u => {
+        connections.push({ from: "载具制造厂", to: u, type: "build" });
+      });
+
+      ["重型坦克", "机甲", "小型机甲"].forEach(u => {
+        connections.push({ from: "高级工厂", to: u, type: "build" });
+      });
+
+      connections.push({ from: "熔炉", to: "熔炉T2", type: "upgrade" });
+      connections.push({ from: "熔炉T2", to: "熔炉T3", type: "upgrade" });
+      connections.push({ from: "难民营", to: "难民营T2", type: "upgrade" });
+      connections.push({ from: "难民营T2", to: "难民营T3", type: "upgrade" });
+      connections.push({ from: "补给站", to: "补给站T2", type: "upgrade" });
+      connections.push({ from: "补给站T2", to: "补给站T3", type: "upgrade" });
+
+      connections.push({ from: "狙击塔", to: "狙击塔T2", type: "upgrade" });
+      connections.push({ from: "加特林炮台", to: "加特林炮台T2", type: "upgrade" });
+      connections.push({ from: "灭活装置", to: "灭活装置T2", type: "upgrade" });
+
+      renderGraph(nodePositions, connections);
+    }
+
+    function buildZombieTree() {
+      const TIER_HEIGHT = 560;
+      const totalWidth = 2200;
+      const totalHeight = TIER_HEIGHT * 2 + 120;
+
+      world.style.width = totalWidth + "px";
+      world.style.height = totalHeight + "px";
+      svgLayer.setAttribute("width", totalWidth);
+      svgLayer.setAttribute("height", totalHeight);
+
+      bandsLayer.innerHTML = `
+        <div class="tier-band tier-1" style="height:${TIER_HEIGHT}px;">
+          <div class="tier-label-watermark">MUTATION 1</div>
+          <div class="tier-tag-pill">T1 基础异化 · 尸潮与原生卵</div>
+        </div>
+        <div class="tier-band tier-2" style="height:${TIER_HEIGHT}px;">
+          <div class="tier-label-watermark">MUTATION 2</div>
+          <div class="tier-tag-pill">T2 深度突变 · 巨卵与高阶畸变体</div>
+        </div>
+      `;
+
+      const nodePositions = {};
+      const connections = [];
+
+      function place(name, x, y, isHub=false) {
+        nodePositions[name] = { x, y, isHub };
+      }
+
+      place("血肉祭坛", 80, 100, true);
+      place("红卵", 360, 90);
+      place("绿卵", 360, 230);
+      place("王霸卵", 360, 370);
+
+      place("脑子", 700, 90);
+      place("尸体", 700, 230);
+      place("虫坑", 700, 370);
+
+      place("僵尸", 1080, 70);
+      place("寄生虫", 1080, 150);
+      place("脊刺僵尸", 1080, 230);
+      place("小触手怪", 1080, 310);
+      place("触手怪", 1080, 390);
+
+      place("尸潮", 1440, 90);
+      place("喷毒尸群", 1440, 210);
+      place("血魔群", 1440, 330);
+
+      place("红巨卵", 360, 700, true);
+      place("突变绿卵", 360, 840);
+      place("电浆虫", 360, 980);
+
+      place("激光脑", 700, 700);
+      place("坟墓", 700, 840);
+      place("邪神大脑", 700, 980);
+
+      place("孵化者", 1080, 700);
+      place("巨型蜘蛛", 1080, 820);
+      place("暗影行者", 1080, 940);
+
+      connections.push({ from: "血肉祭坛", to: "红卵", type: "build" });
+      connections.push({ from: "血肉祭坛", to: "绿卵", type: "build" });
+      connections.push({ from: "红卵", to: "红巨卵", type: "upgrade" });
+      connections.push({ from: "绿卵", to: "突变绿卵", type: "upgrade" });
+      connections.push({ from: "王霸卵", to: "电浆虫", type: "upgrade" });
+
+      connections.push({ from: "脑子", to: "激光脑", type: "upgrade" });
+      connections.push({ from: "尸体", to: "坟墓", type: "upgrade" });
+      connections.push({ from: "脑子", to: "邪神大脑", type: "build" });
+
+      connections.push({ from: "小触手怪", to: "触手怪", type: "upgrade" });
+      connections.push({ from: "坟墓", to: "孵化者", type: "build" });
+
+      renderGraph(nodePositions, connections);
+    }
+
+    function renderGraph(positions, conns) {
+      const CARD_W = 204;
+      const CARD_H = 68;
+
+      let nodesHtml = "";
+      for (const [name, pos] of Object.entries(positions)) {
+        const u = unitMap[name];
+        if (!u) continue;
+
+        const imgTag = u.image && u.image.base64
+          ? `<img src="${u.image.base64}" alt="">`
+          : `<span>🛡️</span>`;
+
+        const priceText = u.stats.price <= 0 ? "初始" : u.stats.price;
+        const dmgText = (u.combat.canAttack && u.combat.singleDamage > 0) ? `⚔️ ${u.combat.singleDamage}` : "";
+
+        nodesHtml += `
+          <div class="tree-node ${pos.isHub ? "core-hub" : ""}" 
+               id="node-${escapeHtml(name)}" 
+               style="left:${pos.x}px; top:${pos.y}px;"
+               onmouseenter="highlightNode('${escapeHtml(name)}')"
+               onmouseleave="unhighlightAll()"
+               onclick="openDrawer('${escapeHtml(name)}')">
+            <div class="anchor-point anchor-in"></div>
+            <div class="node-header">
+              <div class="node-icon">${imgTag}</div>
+              <div class="node-title-box">
+                <div class="node-title" title="${escapeHtml(u.displayName)}">${escapeHtml(u.displayName)}</div>
+                <div class="node-sub">${escapeHtml(u.name)}</div>
+              </div>
+            </div>
+            <div class="node-body">
+              <span class="node-stat">❤️ ${u.stats.hp}</span>
+              ${u.stats.shield > 0 ? `<span class="node-stat">🛡️ ${u.stats.shield}</span>` : ""}
+              <span class="node-stat">💰 ${priceText}</span>
+              ${dmgText ? `<span class="node-stat">${dmgText}</span>` : ""}
+            </div>
+            <div class="anchor-point anchor-out"></div>
+          </div>
+        `;
+      }
+      nodesLayer.innerHTML = nodesHtml;
+
+      let pathsHtml = "";
+      conns.forEach(c => {
+        const p1 = positions[c.from];
+        const p2 = positions[c.to];
+        if (!p1 || !p2) return;
+
+        let x1, y1, x2, y2, d;
+        if (p2.y >= p1.y + 110) {
+          x1 = p1.x + CARD_W / 2;
+          y1 = p1.y + CARD_H;
+          x2 = p2.x + CARD_W / 2;
+          y2 = p2.y;
+          const dy = (y2 - y1) * 0.5;
+          d = `M ${x1} ${y1} C ${x1} ${y1 + dy}, ${x2} ${y2 - dy}, ${x2} ${y2}`;
+        } else {
+          x1 = p1.x + CARD_W;
+          y1 = p1.y + CARD_H / 2;
+          x2 = p2.x;
+          y2 = p2.y + CARD_H / 2;
+          const dx = (x2 - x1) * 0.5;
+          d = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+        }
+        pathsHtml += `<path class="conn-line conn-${c.type}" data-from="${escapeHtml(c.from)}" data-to="${escapeHtml(c.to)}" d="${d}" marker-end="url(#arrow-${c.type})"/>`;
+      });
+      svgLayer.innerHTML += pathsHtml;
+    }
+
+    function highlightNode(name) {
+      const related = new Set([name]);
+      document.querySelectorAll(".conn-line").forEach(path => {
+        const f = path.dataset.from;
+        const t = path.dataset.to;
+        if (f === name || t === name) {
+          related.add(f);
+          related.add(t);
+          path.classList.add("highlighted");
+          path.classList.remove("dimmed");
+        } else {
+          path.classList.add("dimmed");
+          path.classList.remove("highlighted");
+        }
+      });
+      document.querySelectorAll(".tree-node").forEach(node => {
+        const id = node.id.replace("node-", "");
+        if (related.has(id)) {
+          node.classList.add("highlighted");
+          node.classList.remove("dimmed");
+        } else {
+          node.classList.add("dimmed");
+          node.classList.remove("highlighted");
+        }
+      });
+    }
+
+    function unhighlightAll() {
+      document.querySelectorAll(".conn-line").forEach(p => p.classList.remove("highlighted", "dimmed"));
+      document.querySelectorAll(".tree-node").forEach(n => n.classList.remove("highlighted", "dimmed"));
+    }
+
+    function openDrawer(name) {
+      const u = unitMap[name];
+      if (!u) return;
+
+      document.getElementById("d-name").textContent = u.displayName;
+      document.getElementById("d-id").textContent = u.name + " (" + u.filePath + ")";
+
+      const imgHtml = u.image && u.image.base64
+        ? `<div class="drawer-img-box"><img src="${u.image.base64}" alt=""></div>`
+        : "";
+
+      const upgradesHtml = u.relations.convertTo.length > 0 ? `
+        <div>
+          <div class="rel-group-title">🔄 可升级 / 转换为</div>
+          <div class="rel-pill-wrap">
+            ${u.relations.convertTo.map(next => {
+              const target = unitMap[next];
+              const label = target ? target.displayName : next;
+              return `<span class="rel-pill" onclick="openDrawer('${next}')">➔ ${escapeHtml(label)}</span>`;
+            }).join("")}
+          </div>
+        </div>` : "";
+
+      const buildsHtml = u.relations.canBuild.length > 0 ? `
+        <div>
+          <div class="rel-group-title">🛠️ 可建造 / 生产设施</div>
+          <div class="rel-pill-wrap">
+            ${u.relations.canBuild.map(b => {
+              const target = unitMap[b];
+              const label = target ? target.displayName : b;
+              return `<span class="rel-pill" onclick="openDrawer('${b}')">${escapeHtml(label)}</span>`;
+            }).join("")}
+          </div>
+        </div>` : "";
+
+      document.getElementById("drawer-body").innerHTML = `
+        ${imgHtml}
+        <div class="drawer-desc">${escapeHtml(u.description || "暂无情报档案")}</div>
+        <div class="stat-grid">
+          <div class="stat-cell"><div class="stat-label">生命值 (HP)</div><div class="stat-val">❤️ ${u.stats.hp}</div></div>
+          <div class="stat-cell"><div class="stat-label">护盾上限 (Shield)</div><div class="stat-val">🛡️ ${u.stats.shield || 0}</div></div>
+          <div class="stat-cell"><div class="stat-label">建造成本 (Credits)</div><div class="stat-val">💰 ${u.stats.price <= 0 ? "初始" : u.stats.price}</div></div>
+          <div class="stat-cell"><div class="stat-label">单发杀伤 (Damage)</div><div class="stat-val">⚔️ ${u.combat.singleDamage || 0}</div></div>
+          <div class="stat-cell"><div class="stat-label">攻击射程 (Range)</div><div class="stat-val">🎯 ${u.combat.range || 0}</div></div>
+          <div class="stat-cell"><div class="stat-label">移动速度 (Speed)</div><div class="stat-val">⚡ ${u.movement.speed || 0}</div></div>
+        </div>
+        ${upgradesHtml}
+        ${buildsHtml}
+      `;
+      document.getElementById("drawer").classList.add("open");
+      document.getElementById("drawer-backdrop").classList.add("open");
+    }
+
+    function closeDrawer() {
+      document.getElementById("drawer").classList.remove("open");
+      document.getElementById("drawer-backdrop").classList.remove("open");
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    buildTechTree();
+  </script>
+</body>
+</html>

@@ -21,12 +21,14 @@ const DEFAULT_STATE = {
   combatRole: "all",
   specialTrait: "all",
   sortBy: "default",
-  viewMode: "card"
+  viewMode: "card",
+  onlyNew: false
 };
 const state = { ...DEFAULT_STATE };
 
 function init() {
   setupEvents();
+  setupTreeEvents();
   refresh();
 }
 
@@ -99,6 +101,13 @@ function setupEvents() {
     const jump = e.target.closest("[data-jump]");
     if (jump) jumpToUnit(jump.dataset.jump);
   });
+  document.body.addEventListener("keydown", (e) => {
+    const jump = e.target.closest && e.target.closest("[data-jump]");
+    if (jump && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      jumpToUnit(jump.dataset.jump);
+    }
+  });
 
   document.getElementById("modal-close").addEventListener("click", closeModal);
   document.getElementById("unit-modal").addEventListener("click", (e) => {
@@ -152,6 +161,153 @@ function tierGates(faction, tier) {
   return ALL_UNITS.filter(u => u.faction === faction && u.unlocksTier === tier && u.scope !== "unused");
 }
 
+// 科技树（参考 ATD 模组的科技树页）：左侧竖轨是各级总部和升级条件，右侧每一本一棵从总部出发的横向树。
+// 每棵树列出这一本能拿到的全部内容：前一本已有的标"旧"，同一棵树里重复出现的标"见上"且不再展开。
+const GROUP_ORDER = ["建造单位", "建筑", "防御", "部队", "编队", "升级", "生成"];
+
+function startUnitOf(faction) {
+  const chooser = ALL_UNITS.find(u => u.name === "choose");
+  const targets = chooser ? chooser.relations.convertTo : [];
+  return ALL_UNITS.find(u => targets.includes(u.name) && u.faction === faction);
+}
+
+function edgesFrom(u) {
+  const out = [];
+  u.relations.canBuild.forEach(n => out.push([n, "build"]));
+  u.relations.convertTo.forEach(n => out.push([n, "upgrade"]));
+  u.relations.spawns.forEach(n => out.push([n, "spawn"]));
+  return out.filter(([n]) => n !== u.name);
+}
+
+function groupOf(target, kind) {
+  if (kind === "upgrade") return "升级";
+  if (kind === "spawn") return "生成";
+  if (!target) return "建筑";                       // 原版单位（bugNest、repairbay）都是建筑
+  if (target.category === "其他") return target.role.startsWith("编队") ? "编队" : "建造单位";
+  return target.category === "单位" ? "部队" : target.category;
+}
+
+function kindClass(target, kind) {
+  if (kind === "upgrade") return "k-upgrade";
+  if (!target) return "k-building";
+  if (target.category === "建筑") return "k-building";
+  if (target.category === "防御") return "k-defense";
+  if (target.movement.type === "AIR") return "k-air";
+  if (target.unitType === "地面 · 机械") return "k-vehicle";
+  return "k-infantry";
+}
+
+function fmtTime(sec) {
+  return sec ? `${sec >= 10 ? Math.round(sec) : sec}s` : "";
+}
+
+function costHtml(price, time) {
+  const p = price !== "" && price !== undefined && price !== null && String(price) !== "0"
+    ? `<i class="r credits">${escapeHtml(String(price))}</i>` : "";
+  const t = time ? `<i class="tm">${fmtTime(time)}</i>` : "";
+  return p || t ? `<span class="cs">${p}${t}</span>` : "";
+}
+
+// 每一本的总部：人类是 ahx → 人类阵营T2 → 人类阵营T3；僵尸没有总部升级，各本都从僵尸阵营出发
+function tierHeads(faction, tiers) {
+  const start = startUnitOf(faction);
+  return tiers.map(t => {
+    if (t === 1) return { tier: t, hq: start, gates: [] };
+    const gates = ALL_UNITS.filter(u => u.faction === faction && u.unlocksTier === t && u.scope === "player");
+    const own = gates.filter(g => g.tier === t && g.isBuilding);
+    if (own.length === 1 && gates.length === 1) return { tier: t, hq: own[0], gates };
+    return { tier: t, hq: start, gates, sharedHq: true };
+  });
+}
+
+function renderTierTree(root, tier, pool, rendered) {
+  const seen = new Set();
+  const usable = n => { const t = ALL_UNITS[nameMap[n]]; return t && pool.has(n) && t.tier <= tier; };
+  const depth = new Map([[root.name, 0]]);
+  const queue = [root.name];
+  while (queue.length) {
+    const cur = queue.shift();
+    edgesFrom(pool.get(cur)).forEach(([n]) => {
+      if (usable(n) && !depth.has(n)) { depth.set(n, depth.get(cur) + 1); queue.push(n); }
+    });
+  }
+
+  function card(u, kind, opts) {
+    const target = u;
+    const cls = kindClass(target, kind);
+    const isNew = target && target.tier === tier && tier > 1;
+    const isOld = target && target.tier < tier;
+    const tags = [
+      isNew ? `<b class="new">新</b>` : "",
+      opts.ref ? `<b class="tag" title="在离总部更近的位置展开">另见</b>` : "",
+      opts.vanilla ? `<b class="tag">原版</b>` : "",
+      target && target.forms.length ? `<b class="tag">${target.forms.length} 种形态</b>` : ""
+    ].join("");
+    const name = target ? target.displayName : opts.vanilla;
+    const img = target ? (target.image.base64 || target.image.relPath) : "";
+    const price = target ? opts.price ?? target.stats.price : "";
+    const time = target ? opts.time ?? target.stats.buildTime : 0;
+    const toggle = opts.count ? `<button class="tg" type="button" aria-label="展开 ${opts.count} 项">${opts.count}<span></span></button>` : "";
+    const jump = target ? ` data-jump="${escapeHtml(target.name)}"` : "";
+    return {
+      old: isOld,
+      html: `<div class="node ${cls}" tabindex="0"${jump} title="${escapeHtml(target ? target.name : opts.vanilla)}">
+        ${img ? `<span class="th" style="background-image:url('${img}')"></span>` : `<span class="th"></span>`}
+        <span class="bd"><span class="nm">${escapeHtml(name)}${tags}</span>${costHtml(price, time)}</span>${toggle}
+      </div>`
+    };
+  }
+
+  // 子项按类别分组；升级显示升级动作本身的花费和耗时。
+  // 返回 { html, count, hasNew }：count 为子项总数，hasNew 表示子树里有本级新增内容
+  function expand(u, level = 0) {
+    seen.add(u.name);
+    const groups = new Map();
+    edgesFrom(u).forEach(([n, kind]) => {
+      const t = ALL_UNITS[nameMap[n]];
+      if (t && (!pool.has(n) || t.tier > tier)) return;
+      const g = groupOf(t, kind);
+      if (!groups.has(g)) groups.set(g, []);
+      groups.get(g).push([n, kind, t]);
+      rendered.add(`${kind}|${n}|${u.name}`);
+    });
+    const order = [...groups.keys()].sort((a, b) => GROUP_ORDER.indexOf(a) - GROUP_ORDER.indexOf(b));
+    let html = "", count = 0, hasNew = false;
+    order.forEach(g => {
+      const items = groups.get(g).sort((a, b) =>
+        (a[2] ? a[2].stats.price : 0) - (b[2] ? b[2].stats.price : 0)
+        || (a[2] ? a[2].displayName : a[0]).localeCompare(b[2] ? b[2].displayName : b[0], "zh"));
+      let groupNew = false;
+      const lis = items.map(([n, kind, t]) => {
+        const info = kind === "upgrade" ? (u.relations.convertInfo || {})[n] : null;
+        const extra = info ? { price: info.price, time: info.time } : {};
+        if (!t) {
+          groupNew = groupNew || (n === "bugNest" && tier === 3);
+          return `<li>${card(null, kind, { vanilla: n }).html}</li>`;
+        }
+        const selfNew = t.tier === tier;
+        if (seen.has(n) || depth.get(n) < level + 1) {
+          groupNew = groupNew || selfNew;
+          return `<li class="${selfNew ? "" : "old"}">${card(t, kind, { ref: true, ...extra }).html}</li>`;
+        }
+        const sub = expand(t, level + 1);
+        const c = card(t, kind, { count: sub.count, ...extra });
+        const keep = selfNew || sub.hasNew;
+        groupNew = groupNew || keep;
+        return `<li class="${keep ? "" : "old"}">${c.html}${sub.count ? `<ul>${sub.html}</ul>` : ""}</li>`;
+      }).join("");
+      hasNew = hasNew || groupNew;
+      count += items.length;
+      html += `<li class="${level === 0 ? "open " : ""}grp${groupNew ? "" : " old"}"><div class="gnode" tabindex="0">${g}<button class="tg" type="button" aria-label="展开 ${items.length} 项">${items.length}<span></span></button></div><ul>${lis}</ul></li>`;
+    });
+    return { html, count, hasNew };
+  }
+
+  const top = expand(root);
+  // 只展开第一层分组，其余默认折叠
+  return `<ul class="tree">${top.html}</ul>`;
+}
+
 function renderRoadmap() {
   const box = document.getElementById("roadmap");
   if (state.scope !== "player" || state.faction === "系统") {
@@ -159,45 +315,130 @@ function renderRoadmap() {
     return;
   }
   box.hidden = false;
-  const units = ALL_UNITS.filter(u => u.scope === "player" && u.faction === state.faction);
-  const tiers = [...new Set(units.map(u => u.tier))].filter(t => t > 0).sort();
-  // 显示名重复的单位（如开局基地 ahx 和建筑 人类阵营）后面附上代码以区分
-  const nameCount = {};
-  units.forEach(u => { nameCount[u.displayName] = (nameCount[u.displayName] || 0) + 1; });
-  const chipName = u => escapeHtml(u.displayName) + (nameCount[u.displayName] > 1 ? `<small> · ${escapeHtml(u.name)}</small>` : "");
+  const faction = state.faction;
+  const pool = new Map(ALL_UNITS.filter(u => u.faction === faction && u.scope === "player" && u.tier > 0).map(u => [u.name, u]));
+  const tiers = [...new Set([...pool.values()].map(u => u.tier))].sort();
+  const heads = tierHeads(faction, tiers);
+  const rendered = new Set();
+  const reached = new Set();
 
-  let rows = "";
-  tiers.forEach(t => {
-    const gates = tierGates(state.faction, t);
-    const gateText = t === 1
-      ? "开局即可建造"
-      : (gates.length ? "解锁：" + gates.map(g => `<span class="gate-link" data-jump="${escapeHtml(g.name)}">${escapeHtml(g.displayName)}</span>`).join(" / ") : "");
-    const cells = CATEGORIES.map(cat => {
-      const list = units.filter(u => u.tier === t && u.category === cat).sort(byDefaultOrder);
-      const chips = list.map(u => `<span class="road-chip" data-jump="${escapeHtml(u.name)}" title="${escapeHtml(u.name)}">${chipName(u)}</span>`).join("");
-      return `<td>${chips || '<span class="road-empty">—</span>'}</td>`;
-    }).join("");
-    rows += `
-      <tr>
-        <th class="road-tier">
-          <span class="tier-badge tier-${t}">${tierLabel(t)}</span>
-          <div class="road-gate">${gateText}</div>
-        </th>
-        ${cells}
-      </tr>`;
-  });
+  const sections = heads.map((h, i) => {
+    const next = heads[i + 1];
+    const hq = h.hq;
+    const treeHtml = renderTierTree(hq, h.tier, pool, rendered);
+    [...treeHtml.matchAll(/data-jump="([^"]+)"/g)].forEach(m => reached.add(m[1].replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">")));
+    reached.add(hq.name);
+    const meta = [`生命 ${hq.stats.hp}`, hq.stats.shield ? `护盾 ${hq.stats.shield}` : ""].filter(Boolean).join("，");
+    const note = h.sharedHq
+      ? `满足任一条件进入 T${h.tier}：${h.gates.map(g => `<span class="gate-link" data-jump="${escapeHtml(g.name)}">${escapeHtml(g.displayName)}</span>`).join("、")}`
+      : (h.tier === 1 ? "开局选择阵营后获得" : "");
+    let upgrade = "";
+    if (next && !next.sharedHq && next.hq !== hq) {
+      const info = (hq.relations.convertInfo || {})[next.hq.name];
+      rendered.add(`upgrade|${next.hq.name}|${hq.name}`);
+      upgrade = `<div class="up-arrow"><span class="lbl">升级到 T${next.tier}</span>${info ? costHtml(info.price, info.time) : ""}</div>`;
+    } else if (next) {
+      upgrade = `<div class="up-arrow"><span class="lbl">进入 T${next.tier}</span><span class="note">满足下一段列出的任一条件</span></div>`;
+    }
+    return `
+      <section class="tier t${h.tier}">
+        <div class="rail">
+          <div class="tier-tag">T${h.tier}</div>
+          <div class="hq node k-building" tabindex="0" data-jump="${escapeHtml(hq.name)}">
+            <span class="th big" style="background-image:url('${hq.image.base64 || hq.image.relPath}')"></span>
+            <span class="bd"><span class="nm">${escapeHtml(hq.displayName)}</span><span class="meta">${meta}</span>${note ? `<span class="note">${note}</span>` : ""}</span>
+          </div>
+          <div class="row-tools"><button type="button" data-act="open">展开本级</button><button type="button" data-act="close">收起</button></div>
+          ${upgrade}
+        </div>
+        <div class="canvas">${treeHtml}</div>
+      </section>`;
+  }).join("");
+
+  const orphans = [...pool.values()].filter(u => !reached.has(u.name));
+  const orphanHtml = orphans.length
+    ? `<p class="tt-orphans">不在任何总部的生产链上（只能由辅助单位或战斗中获得）：${orphans.map(u => `<span class="gate-link" data-jump="${escapeHtml(u.name)}">${escapeHtml(u.displayName)}</span>`).join("、")}</p>`
+    : "";
 
   box.innerHTML = `
-    <div class="roadmap-head">
-      <h2>${state.faction}阵营 · 发育路线</h2>
-      <p>等级按科技树推算：每个单位标的是最早能拿到它的阶段。点名字查看详情。</p>
+    <div class="tt-head">
+      <div>
+        <h2>${faction}阵营科技树</h2>
+        <p class="sub">左侧是各级总部和升级条件，右侧从总部出发逐层展开：总部 → 单位 → 建筑 → 生产与升级。点卡片看详情，点右侧数字展开。</p>
+      </div>
+      <div class="tools">
+        <button type="button" data-all="open">全部展开</button>
+        <button type="button" data-all="close">全部收起</button>
+        <button type="button" data-onlynew aria-pressed="${state.onlyNew ? "true" : "false"}">只看本级新增</button>
+      </div>
     </div>
-    <div class="roadmap-scroll">
-      <table class="roadmap-table">
-        <thead><tr><th></th>${CATEGORIES.map(c => `<th>${CATEGORY_ICON[c]} ${c}</th>`).join("")}</tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>`;
+    <div class="legend">
+      <span><i class="dot" style="background:var(--tt-t1)"></i>T1</span>
+      <span><i class="dot" style="background:var(--tt-t2)"></i>T2</span>
+      <span><i class="dot" style="background:var(--tt-t3)"></i>T3</span>
+      <span>卡片左边色条：<i class="dot" style="background:var(--k-infantry)"></i>步兵 <i class="dot" style="background:var(--k-vehicle)"></i>载具 <i class="dot" style="background:var(--k-air)"></i>飞行 <i class="dot" style="background:var(--k-building)"></i>建筑 <i class="dot" style="background:var(--k-defense)"></i>防御 <i class="dot" style="background:var(--k-upgrade)"></i>升级</span>
+    </div>
+    <div class="tt-body${state.onlyNew ? " only-new" : ""}">${sections}</div>
+    ${orphanHtml}`;
+
+  if (location.hash === "#open-all") box.querySelectorAll(".tree li").forEach(li => li.classList.add("open"));
+  const missing = checkTreeCoverage(pool, rendered, reached);
+  box.dataset.missingEdges = String(missing.length);
+  box.dataset.missingList = missing.join("; ");
+  if (missing.length) console.warn("科技树缺少的关系：", missing);
+}
+
+// 自检：阵营内每条建造 / 升级 / 生成关系都应出现在某一本的树里（来源单位不在任何生产链上的除外）
+function checkTreeCoverage(pool, rendered, reached) {
+  const missing = [];
+  pool.forEach((u, name) => {
+    if (!reached.has(name)) return;
+    edgesFrom(u).forEach(([n, kind]) => {
+      const t = ALL_UNITS[nameMap[n]];
+      if (t && !pool.has(n)) return;
+      if (!rendered.has(`${kind}|${n}|${name}`)) missing.push(`${name} -${kind}-> ${n}`);
+    });
+  });
+  return missing;
+}
+
+function setupTreeEvents() {
+  const box = document.getElementById("roadmap");
+  box.addEventListener("click", (e) => {
+    const tg = e.target.closest(".tg");
+    if (tg) {
+      e.stopPropagation();
+      tg.closest("li").classList.toggle("open");
+      return;
+    }
+    const gnode = e.target.closest(".gnode");
+    if (gnode) {
+      gnode.closest("li").classList.toggle("open");
+      return;
+    }
+    const all = e.target.closest("[data-all]");
+    if (all) {
+      box.querySelectorAll(".tree li").forEach(li => li.classList.toggle("open", all.dataset.all === "open"));
+      return;
+    }
+    const act = e.target.closest("[data-act]");
+    if (act) {
+      act.closest(".tier").querySelectorAll(".tree li").forEach(li => li.classList.toggle("open", act.dataset.act === "open"));
+      return;
+    }
+    if (e.target.closest("[data-onlynew]")) {
+      state.onlyNew = !state.onlyNew;
+      box.querySelector(".tt-body").classList.toggle("only-new", state.onlyNew);
+      e.target.closest("[data-onlynew]").setAttribute("aria-pressed", String(state.onlyNew));
+    }
+  }, true);
+  box.addEventListener("keydown", (e) => {
+    const gnode = e.target.closest && e.target.closest(".gnode");
+    if (gnode && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      gnode.closest("li").classList.toggle("open");
+    }
+  });
 }
 
 // ---------------------------------------------------------------- 筛选
@@ -505,18 +746,26 @@ function openDetail(idx) {
   document.getElementById("unit-modal").classList.add("show");
 }
 
+const VANILLA_UNITS = {
+  "bugNest": { displayName: "虫巢 (原版)", tier: 3 },
+  "repairbay": { displayName: "维修站 (原版)", tier: 2 },
+};
+
 function relationBlock(title, names) {
   if (!names || names.length === 0) return "";
   const pills = names.map(n => {
     const target = ALL_UNITS[nameMap[n]];
-    const disp = target ? target.displayName : n;
-    const tier = target && target.tier ? ` <span class="tier-badge xs tier-${target.tier}">${tierLabel(target.tier)}</span>` : "";
-    const tag = target && SCOPE_BADGE[target.scope] ? `<span style="opacity:.6;">·${SCOPE_BADGE[target.scope]}</span>` : "";
-    return `<span class="relation-pill" data-jump="${escapeHtml(n)}">${escapeHtml(disp)}${tier}${tag}</span>`;
+    const vanilla = VANILLA_UNITS[n];
+    const disp = target ? target.displayName : (vanilla ? vanilla.displayName : n);
+    const tierNum = target && target.tier ? target.tier : (vanilla ? vanilla.tier : 0);
+    const tier = tierNum ? ` <span class="tier-badge xs tier-${tierNum}">${tierLabel(tierNum)}</span>` : "";
+    const tag = target && SCOPE_BADGE[target.scope] ? `<span style="opacity:.6;">·${SCOPE_BADGE[target.scope]}</span>` : (vanilla ? `<span style="opacity:.6;">·原版</span>` : "");
+    const jumpAttr = target ? `data-jump="${escapeHtml(n)}"` : `style="cursor:default;opacity:0.85;" title="游戏原版内置单位"`;
+    return `<span class="relation-pill" ${jumpAttr}>${escapeHtml(disp)}${tier}${tag}</span>`;
   }).join("");
   return `
     <div class="relation-block">
-      <div class="relation-title">${title}</div>
+      <div class="relation-title">${escapeHtml(title)}</div>
       <div class="relation-pills">${pills}</div>
     </div>`;
 }

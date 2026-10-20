@@ -37,6 +37,12 @@ START_UNITS = ("commandCenter", "builder")
 # 可以选中、但只是特效 / 残骸 / 弹体 / 开局选择器的单位
 HELPER_NAMES = {"choose", "尸块", "尸块2", "bleed", "手臂", "孵化者炮弹", "爬行者3"}
 
+# 模组引用的游戏原生建筑/单位（不单独作为模组卡片列出，但在建造关系中予以识别与展示）
+KNOWN_VANILLA = {
+    "bugNest": {"displayName": "虫巢 (原版)", "tier": 3, "isBuilding": True},
+    "repairbay": {"displayName": "维修站 (原版)", "tier": 2, "isBuilding": True},
+}
+
 FACTIONS = {"人类": "人类", "僵尸": "僵尸", "阵营选择": "系统"}
 
 
@@ -85,6 +91,17 @@ def lock_requirement(cond):
     """从 "if not numberOfUnitsInTeam(withTag='血肉祭坛', greaterThan=0)" 中取出需要的 tag。"""
     m = re.fullmatch(r"if\s+not\s+numberOfUnitsInTeam\(\s*withTag\s*=\s*'([^']+)'\s*,\s*greaterThan\s*=\s*0\s*\)", cond.strip())
     return m.group(1) if m else ""
+
+
+def action_seconds(speed):
+    """动作的 buildSpeed 换算成秒：写成 "30s" 的直接取值，写成小数的是每帧进度。"""
+    speed = speed.strip()
+    if not speed:
+        return None
+    if speed.endswith("s"):
+        return to_float(speed[:-1]) or 0
+    v = to_float(speed)
+    return round(1.0 / (v * 60.0), 1) if v > 0 else None
 
 
 def to_float(v, default=0.0):
@@ -215,6 +232,17 @@ def extract_unit(path, img_cache):
         if m:
             actions.append(v)
 
+    # 升级 / 转换动作的花费与耗时：{目标单位: {"price": 文本, "time": 秒}}
+    convert_info = {}
+    action_defs = [(core.get(m.group(1) + "_convertTo", ""), core.get(m.group(1) + "_price", ""),
+                    core.get(m.group(1) + "_buildSpeed", ""))
+                   for k in core if (m := re.fullmatch(r"(action_\w+)_convertTo", k))]
+    action_defs += [(kv.get("convertTo", ""), kv.get("price", ""), kv.get("buildSpeed", ""))
+                    for sec, kv in sections.items() if sec.startswith("action_") and kv.get("convertTo")]
+    for target, action_price, action_speed in action_defs:
+        for t in split_names(target):
+            convert_info[t] = {"price": action_price.strip(), "time": action_seconds(action_speed)}
+
     # 带解锁条件的建造 / 转换：{目标单位: 需要场上已有的单位 tag}
     gated = {}
     for k, v in core.items():
@@ -277,6 +305,7 @@ def extract_unit(path, img_cache):
         "relations": {
             "canBuild": can_build, "builtFrom": built_from, "convertTo": convert_to, "spawns": spawns,
             "spawnOnDeath": spawn_on_death, "actions": list(dict.fromkeys(actions)),
+            "convertInfo": convert_info,
         },
         "traits": traits,
     }
@@ -370,7 +399,7 @@ def classify(units):
         u["formOf"] = form_of.get(n, "")
         u["forms"] = sorted(f for f, b in form_of.items() if b == n)
         u["relations"]["builtFrom"] = sorted(built_by.get(n, set()))
-        u["relations"]["canBuild"] = sorted(t for t in build.get(n, set()) if t in by_name)
+        u["relations"]["canBuild"] = sorted(t for t in build.get(n, set()) if t in by_name or t in KNOWN_VANILLA)
         u["relations"]["convertTo"] = sorted(t for t in convert.get(n, set()) if t in by_name)
         u["relations"]["spawnedBy"] = sorted(set(spawned_by.get(n, [])))
         u["relations"]["spawns"] = sorted(t for t in spawn.get(n, set()) if t in by_name)
@@ -383,7 +412,10 @@ def classify(units):
             u["unlocksTier"] = tiers[n] + 1
         else:
             u["unlocksTier"] = 0
-        u["_builds_buildings"] = any(by_name[t]["isBuilding"] for t in u["relations"]["canBuild"])
+        u["_builds_buildings"] = any(
+            by_name[t]["isBuilding"] if t in by_name else KNOWN_VANILLA[t].get("isBuilding", False)
+            for t in u["relations"]["canBuild"]
+        )
         u["category"], u["role"] = category_of(u)
         if u["_replaces"] and u["_replaces"] not in START_UNITS:
             u["traits"].append({"label": f"替换 {u['_replaces']}", "type": "replace"})
